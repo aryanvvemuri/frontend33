@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import 'NavBar.css';
+import './NavBar.css';
 
 function Navbar() {
   const location = useLocation();
