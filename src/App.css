@@ -1,8 +1,10 @@
 #root {
   max-width: 100%;
-  margin: 0 auto;
+  margin: 0;
   padding: 2rem;
   text-align: center;
+  height: auto;
+  display: block;
 }
 
 .logo {
@@ -43,6 +45,10 @@
 body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
-  box-sizing: border-box;
+  width: 100%;
+  height: auto;
+  display: block; /* Remove flexbox centering */
+  align-items: unset; /* Remove vertical centering */
+  justify-content: unset; /* Remove horizontal centering */
 }
+

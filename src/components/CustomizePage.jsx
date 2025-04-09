@@ -6,7 +6,7 @@ import { useCart } from '../components/CartContext';
 
 const CustomizePage = () => {
   const { id } = useParams();
-  const { addToCart } = useCart(); // ← hook from CartContext
+  const { addToCart } = useCart(); // Hook from CartContext
 
   const [item, setItem] = useState(null); // Current item
   const [menuItems, setMenuItems] = useState([]); // All menu items for filtering toppings
@@ -16,29 +16,37 @@ const CustomizePage = () => {
 
   // 1. Fetch the drink being customized
   useEffect(() => {
-    axios.get(`https://leboba.onrender.com/api/menu/items${id}`)
-      .then(res => setItem(res.data))
-      .catch(err => console.error('Failed to fetch item:', err));
+    if (!id) {
+      console.error('Invalid ID:', id);
+      return;
+    }
+
+    axios
+      .get(`https://leboba.onrender.com/api/menu/item/${id}`)
+      .then((res) => setItem(res.data))
+      .catch((err) => console.error('Failed to fetch item:', err));
   }, [id]);
 
   // 2. Fetch full menu to extract topping options
   useEffect(() => {
-    axios.get('https://leboba.onrender.com/api/menu/items')
-      .then(res => setMenuItems(res.data))
-      .catch(err => console.error('Failed to fetch menu items:', err));
+    axios
+      .get('https://leboba.onrender.com/api/menu/items')
+      .then((res) => setMenuItems(res.data))
+      .catch((err) => console.error('Failed to fetch menu items:', err));
   }, []);
 
   // 3. Extract topping items by name
-  const toppingOptions = menuItems.filter(m =>
-    m.item.toLowerCase().includes('tapioca') ||
-    m.item.toLowerCase().includes('popping') ||
-    m.item.toLowerCase().includes('jelly')
+  const toppingOptions = menuItems.filter(
+    (m) =>
+      m.item.toLowerCase().includes('tapioca') ||
+      m.item.toLowerCase().includes('popping') ||
+      m.item.toLowerCase().includes('jelly')
   );
 
   // 4. Toggle toppings (we use item.id or item.item for uniqueness)
   const toggleTopping = (topping) => {
-    if (toppings.some(t => t.item === topping.item)) {
-      setToppings(toppings.filter(t => t.item !== topping.item));
+    if (toppings.some((t) => t.item === topping.item)) {
+      setToppings(toppings.filter((t) => t.item !== topping.item));
     } else {
       setToppings([...toppings, topping]);
     }
@@ -50,13 +58,14 @@ const CustomizePage = () => {
       ...item,
       sweetness,
       ice,
-      toppings
+      toppings,
     };
 
     addToCart(customDrink);
     console.log('Added to cart:', customDrink);
   };
 
+  // Handle loading state
   if (!item) return <div>Loading...</div>;
 
   return (
@@ -90,7 +99,7 @@ const CustomizePage = () => {
           <div key={i}>
             <input
               type="checkbox"
-              checked={toppings.some(t => t.item === top.item)}
+              checked={toppings.some((t) => t.item === top.item)}
               onChange={() => toggleTopping(top)}
             />
             <span>{top.item}</span>
@@ -98,7 +107,9 @@ const CustomizePage = () => {
         ))}
       </div>
 
-      <button className="add-cart-btn" onClick={handleAddToCart}>Add to Cart</button>
+      <button className="add-cart-btn" onClick={handleAddToCart}>
+        Add to Cart
+      </button>
     </div>
   );
 };
