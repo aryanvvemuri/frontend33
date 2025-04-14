@@ -4,6 +4,8 @@ import MenuPage from './components/MenuPage';
 import CustomizePage from './components/CustomizePage';
 import CartPage from './components/CartPage';
 import NavBar from './components/NavBar';
+import Manager from './components/Manager';
+
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <Route path="/menu/:categoryId" element={<MenuPage />} />
         <Route path="/customize/:id" element={<CustomizePage />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/manager" element={<Manager />} />
+
       </Routes>
     </>
   );

@@ -6,6 +6,8 @@ function NavBar() {
     <nav className="nav-bar">
       <Link to="/menu/1"> Menu</Link>
       <Link to="/cart"> Cart</Link>
+      <Link to="/manager"> Manager</Link>
+
     </nav>
   );
 }
