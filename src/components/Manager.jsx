@@ -1,8 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './Manager.css';
 
 function Manager() {
   const [activeModal, setActiveModal] = useState(null);
+  const [orders, setOrders] = useState([]);
+  const [totalSales, setTotalSales] = useState(0);
+
+  useEffect(() => {
+    axios.get('https://leboba.onrender.com/api/orders/getOrder')
+      .then(res => {
+        setOrders(res.data.orders);
+        const total = res.data.orders.reduce((sum, order) => sum + Number(order.totalprice), 0);
+        setTotalSales(total);
+      })
+      .catch(err => console.error('Failed to load orders:', err));
+  }, []);
 
   const openModal = (modalType) => {
     setActiveModal(modalType);
@@ -45,9 +58,21 @@ function Manager() {
             {activeModal === 'sales' && (
               <div className="modal-body">
                 <h2>Sales Reports</h2>
-                {
-                    //TODO add stuff
-                }
+                <div className="sales-summary">
+                  <h3>Last 24 Hours</h3>
+                  <p>Total Sales: ${totalSales}</p>
+                  <p>Number of Orders: {orders.length}</p>
+                </div>
+                <div className="orders-list">
+                  <h3>Recent Orders</h3>
+                  {orders.map(order => (
+                    <div key={order.idorder} className="order-item">
+                      <p>Order #{order.idorder}</p>
+                      <p>Amount: ${order.totalprice.toFixed(2)}</p>
+                      <p>Time: {new Date(order.created_at).toLocaleString()}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
             {activeModal === 'inventory' && (
