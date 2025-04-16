@@ -1,6 +1,33 @@
 .manager-page {
   padding: 2rem;
 }
+.inventory-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+}
+
+.inventory-form input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.inventory-form .add-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.inventory-form .add-btn:hover {
+  background-color: #45a049;
+}
 .sales-summary {
   background-color: #f5f5f5;
   padding: 20px;

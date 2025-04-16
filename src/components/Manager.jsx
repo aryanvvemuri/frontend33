@@ -6,6 +6,7 @@ function Manager() {
   const [activeModal, setActiveModal] = useState(null);
   const [orders, setOrders] = useState([]);
   const [totalSales, setTotalSales] = useState(0);
+  const [newIngredient, setNewIngredient] = useState({ item: '', quantity: '' });
 
   useEffect(() => {
     axios.get('https://leboba.onrender.com/api/orders/getOrder')
@@ -23,6 +24,33 @@ function Manager() {
 
   const closeModal = () => {
     setActiveModal(null);
+  };
+
+  const handleInventorySubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // First check if ingredient exists
+      const response = await axios.get(`https://leboba.onrender.com/api/ingredients`);
+      const existingIngredient = response.data.find(
+        ing => ing.item.toLowerCase() === newIngredient.item.toLowerCase()
+      );
+
+      if (existingIngredient) {
+        const newQuantity = Number(existingIngredient.quantity) + Number(newIngredient.quantity);
+        await axios.put(`https://leboba.onrender.com/api/ingredients/${existingIngredient.idinventory}`, {
+          item: existingIngredient.item,
+          quantity: newQuantity
+        });
+      } else {
+        await axios.post('https://leboba.onrender.com/api/ingredients', newIngredient);
+      }
+      
+      setNewIngredient({ item: '', quantity: '' });
+      alert('Inventory updated successfully!');
+    } catch (error) {
+      console.error('Error updating inventory:', error);
+      alert('Failed to update inventory');
+    }
   };
 
   return (
@@ -78,9 +106,23 @@ function Manager() {
             {activeModal === 'inventory' && (
               <div className="modal-body">
                 <h2>Inventory Management</h2>
-                {
-                    //TODO add stuff
-                }
+                <form onSubmit={handleInventorySubmit} className="inventory-form">
+                  <input
+                    type="text"
+                    placeholder="Item name"
+                    value={newIngredient.item}
+                    onChange={(e) => setNewIngredient({ ...newIngredient, item: e.target.value })}
+                    required
+                  />
+                  <input
+                    type="number"
+                    placeholder="Quantity"
+                    value={newIngredient.quantity}
+                    onChange={(e) => setNewIngredient({ ...newIngredient, quantity: e.target.value })}
+                    required
+                  />
+                  <button type="submit" className="add-btn">Add to Inventory</button>
+                </form>
               </div>
             )}
             {activeModal === 'employee' && (
