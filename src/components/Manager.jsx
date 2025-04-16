@@ -65,6 +65,17 @@ function Manager() {
     }
   };  
   
+  const handleDeleteEmployee = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this employee?')) return;
+  
+    try {
+      await axios.delete(`https://leboba.onrender.com/api/employees/${id}`);
+      fetchEmployees();
+    } catch (err) {
+      console.error('Error deleting employee:', err);
+      alert('Failed to delete employee');
+    }
+  };  
 
   const handleInventorySubmit = async (e) => {
     e.preventDefault();
@@ -188,15 +199,25 @@ function Manager() {
     </form>
 
     <div className="employee-list">
-      <h3>Current Employees</h3>
-      {employees.map(emp => (
-        <div key={emp.idemployee} className="employee-card">
-          <p><strong>ID:</strong> {emp.idemployee}</p>
-          <p><strong>Name:</strong> {emp.name}</p>
-          <p><strong>Role:</strong> {emp.title}</p>
-        </div>
-      ))}
-    </div>
+  <h3>Current Employees</h3>
+  {filteredEmployees.length === 0 ? (
+    <p style={{ color: "#444" }}>No employees found.</p>
+  ) : (
+    filteredEmployees.map(emp => (
+      <div key={emp.idemployee} className="employee-card">
+        <p><strong>ID:</strong> {emp.idemployee}</p>
+        <p><strong>Name:</strong> {emp.name}</p>
+        <p><strong>Role:</strong> {emp.title}</p>
+        <button
+          className="delete-btn"
+          onClick={() => handleDeleteEmployee(emp.idemployee)}
+        >
+          Delete
+        </button>
+      </div>
+    ))
+  )}
+</div>
   </div>
 )}
 
