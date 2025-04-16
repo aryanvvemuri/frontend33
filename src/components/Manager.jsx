@@ -13,12 +13,39 @@ function Manager() {
   const [newEmployee, setNewEmployee] = useState({ name: '', role: '' });
   const [searchQuery, setSearchQuery] = useState('');
 
+  const [hourlySales, setHourlySales] = useState([]);
+
+  const processHourlySales = (orders) => {
+    const hourlyData = {};
+    
+    orders.forEach(order => {
+      const orderHour = new Date(order.created_at).getHours();
+      if (!hourlyData[orderHour]) {
+        hourlyData[orderHour] = {
+          total: 0,
+          count: 0
+        };
+      }
+      hourlyData[orderHour].total += Number(order.totalprice);
+      hourlyData[orderHour].count += 1;
+    });
+
+    return Object.entries(hourlyData)
+      .map(([hour, data]) => ({
+        hour: hour,
+        total: data.total,
+        count: data.count
+      }))
+      .sort((a, b) => a.hour - b.hour);
+  };
+
   useEffect(() => {
     axios.get('https://leboba.onrender.com/api/orders/getOrder')
       .then(res => {
         setOrders(res.data.orders);
         const total = res.data.orders.reduce((sum, order) => sum + Number(order.totalprice), 0);
         setTotalSales(total);
+        setHourlySales(processHourlySales(res.data.orders));
       })
       .catch(err => console.error('Failed to load orders:', err));
   }, []);
@@ -139,9 +166,23 @@ function Manager() {
                 <h2>Sales Reports</h2>
                 <div className="sales-summary">
                   <h3>Last 24 Hours</h3>
-                  <p>Total Sales: ${totalSales}</p>
+                  <p>Total Sales: ${totalSales.toFixed(2)}</p>
                   <p>Number of Orders: {orders.length}</p>
                 </div>
+                
+                <div className="hourly-sales">
+                  <h3>Sales by Hour</h3>
+                  <div className="hourly-sales-grid">
+                    {hourlySales.map(({ hour, total, count }) => (
+                      <div key={hour} className="hourly-item">
+                        <h4>{hour}:00</h4>
+                        <p>Sales: ${total.toFixed(2)}</p>
+                        <p>Orders: {count}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="orders-list">
                   <h3>Recent Orders</h3>
                   {orders.map(order => (
