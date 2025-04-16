@@ -8,6 +8,11 @@ function Manager() {
   const [totalSales, setTotalSales] = useState(0);
   const [newIngredient, setNewIngredient] = useState({ item: '', quantity: '' });
 
+  //employee states
+  const [employees, setEmployees] = useState([]);
+  const [newEmployee, setNewEmployee] = useState({ name: '', role: '' });
+  const [searchQuery, setSearchQuery] = useState('');
+
   useEffect(() => {
     axios.get('https://leboba.onrender.com/api/orders/getOrder')
       .then(res => {
@@ -20,11 +25,46 @@ function Manager() {
 
   const openModal = (modalType) => {
     setActiveModal(modalType);
+    if (modalType === 'employee') {
+      fetchEmployees();
+    }
   };
 
   const closeModal = () => {
     setActiveModal(null);
   };
+
+  const fetchEmployees = async () => {
+    try {
+      const res = await axios.get('https://leboba.onrender.com/api/employees');
+      setEmployees(res.data);
+    } catch (err) {
+      console.error('Error fetching employees:', err);
+    }
+  };
+  
+  const filteredEmployees = employees.filter(emp =>
+    emp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    emp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    emp.idemployee.toString().includes(searchQuery)
+  );
+  
+  const handleAddEmployee = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post('https://leboba.onrender.com/api/employees', {
+        name: newEmployee.name,
+        title: newEmployee.role,
+      });
+      setNewEmployee({ name: '', role: '' });
+      fetchEmployees(); // refresh list
+      alert('Employee added!');
+    } catch (err) {
+      console.error('Error adding employee:', err);
+      alert('Failed to add employee');
+    }
+  };  
+  
 
   const handleInventorySubmit = async (e) => {
     e.preventDefault();
@@ -126,13 +166,40 @@ function Manager() {
               </div>
             )}
             {activeModal === 'employee' && (
-              <div className="modal-body">
-                <h2>Employee Management</h2>
-                {
-                    //TODO add stuff
-                }
-              </div>
-            )}
+  <div className="modal-body">
+    <h2>Employee Management</h2>
+
+    <form onSubmit={handleAddEmployee} className="inventory-form">
+      <input
+        type="text"
+        placeholder="Name"
+        value={newEmployee.name}
+        onChange={(e) => setNewEmployee({ ...newEmployee, name: e.target.value })}
+        required
+      />
+      <input
+        type="text"
+        placeholder="Role (e.g. Manager, Employee)"
+        value={newEmployee.role}
+        onChange={(e) => setNewEmployee({ ...newEmployee, role: e.target.value })}
+        required
+      />
+      <button type="submit" className="add-btn">Add Employee</button>
+    </form>
+
+    <div className="employee-list">
+      <h3>Current Employees</h3>
+      {employees.map(emp => (
+        <div key={emp.idemployee} className="employee-card">
+          <p><strong>ID:</strong> {emp.idemployee}</p>
+          <p><strong>Name:</strong> {emp.name}</p>
+          <p><strong>Role:</strong> {emp.title}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
           </div>
         </div>
       )}
