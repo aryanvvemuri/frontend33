@@ -11,7 +11,7 @@ function MenuPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('http://localhost:3000/api/menu/items')
+    axios.get('https://leboba.onrender.com/api/menu/items')
       .then(res => setMenuItems(res.data))
       .catch(err => console.error('Failed to load menu items:', err));
   }, []);
