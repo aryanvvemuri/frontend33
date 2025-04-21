@@ -1,23 +1,38 @@
-nav {
+.nav-bar {
   background-color: #111;
   padding: 16px 24px;
   display: flex;
-  justify-content: center;
+  justify-content: center; /* Center-align the nav-links */
   align-items: center;
 }
 
-nav a {
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a,
+.nav-links .logout-link,
+.nav-links .welcome-name {
   color: #ffa94d;
-  font-size: 24px;         /* Make links bigger */
+  font-size: 18px;
   font-weight: bold;
-  margin: 0 20px;
   text-decoration: none;
   padding: 10px 18px;
   border-radius: 8px;
   transition: background-color 0.3s ease;
 }
 
-nav a:hover {
-  background-color: #333; /* Darker background on hover */
+.nav-links a:hover,
+.nav-links .logout-link:hover,
+.nav-links .welcome-name:hover {
+  background-color: #333;
   color: white;
+}
+
+.logout-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
 }

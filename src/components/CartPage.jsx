@@ -13,7 +13,7 @@ const CartPage = () => {
     try {
       for (const item of cartItems) {
         console.log(' Sending item to backend:', item);
-        await axios.post('https://leboba.onrender.com/api/carts/add', item);
+        await axios.post('http://localhost:3000/api/carts/add', item);
       }
       alert(' Order placed successfully!');
       clearCart();

@@ -22,7 +22,7 @@ const CustomizePage = () => {
     }
 
     axios
-      .get(`https://leboba.onrender.com/api/menu/item/${id}`)
+      .get(`http://localhost:3000/api/menu/item/${id}`)
       .then((res) => setItem(res.data))
       .catch((err) => console.error('Failed to fetch item:', err));
   }, [id]);
@@ -30,7 +30,7 @@ const CustomizePage = () => {
   // 2. Fetch full menu to extract topping options
   useEffect(() => {
     axios
-      .get('https://leboba.onrender.com/api/menu/items')
+      .get('http://localhost:3000/api/menu/items')
       .then((res) => setMenuItems(res.data))
       .catch((err) => console.error('Failed to fetch menu items:', err));
   }, []);
