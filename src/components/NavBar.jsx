@@ -9,6 +9,7 @@ function NavBar({ userName, setUserName }) {
 
   return (
     <nav className="nav-bar">
+
       {/* Display user's name styled like buttons */}
       <div className="nav-links">
         {userName && <span className="welcome-name">Welcome, {userName}!</span>}
@@ -24,6 +25,9 @@ function NavBar({ userName, setUserName }) {
           <Link to="/login">Login</Link>
         )}
       </div>
+      <Link to="/menu/1"> Menu</Link>
+      <Link to="/cart"> Cart</Link>
+      <Link to="/manager"> Manager</Link>
     </nav>
   );
 }

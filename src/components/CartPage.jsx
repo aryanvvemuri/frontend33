@@ -10,18 +10,27 @@ const CartPage = () => {
   const total = cartItems.reduce((sum, item) => sum + Number(item.price || 0), 0);
 
   const handlePlaceOrder = async () => {
-    try {
-      for (const item of cartItems) {
-        console.log(' Sending item to backend:', item);
-        await axios.post('https://leboba.onrender.com/api/carts/add', item);
-      }
-      alert(' Order placed successfully!');
-      clearCart();
-    } catch (err) {
-      console.error(' Error placing order:', err);
-      alert('There was an issue placing your order.');
-    }
-  };
+  try {
+    const allIds = cartItems.map(item => item.idmenu);
+    const total = cartItems.reduce((sum, item) => sum + Number(item.price || 0), 0);
+
+    const orderPayload = {
+      totalPrice: total,
+      selectedItems: allIds  // just the array of idmenu values
+    };
+
+    console.log('📦 Final order to send:', orderPayload);
+
+    await axios.post('https://leboba.onrender.com/api/carts/add', orderPayload);
+    alert('✅ Order placed!');
+    clearCart();
+  } catch (err) {
+    console.error('❌ Error placing order:', err);
+    alert('Something went wrong placing your order.');
+  }
+};
+
+    
 
   return (
     <div className="cart-page">
