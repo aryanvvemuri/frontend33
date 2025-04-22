@@ -24,10 +24,8 @@ function NavBar({ userName, setUserName }) {
         ) : (
           <Link to="/login">Login</Link>
         )}
+        <Link to="/manager">Manager</Link>
       </div>
-      <Link to="/menu/1"> Menu</Link>
-      <Link to="/cart"> Cart</Link>
-      <Link to="/manager"> Manager</Link>
     </nav>
   );
 }
