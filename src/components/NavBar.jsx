@@ -1,22 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './NavBar.css';
+import { translateText } from '../utils/translate';
 
 function NavBar({ userName, setUserName }) {
   const [weather, setWeather] = useState(null); // State to store weather data
   const [weatherError, setWeatherError] = useState(false); // State to track errors
+  const [language, setLanguage] = useState('es'); // Default target language (Spanish)
+  const [translatedWeather, setTranslatedWeather] = useState(''); // Translated weather description
 
   const handleLogout = () => {
     setUserName(null); // Clear the user's name to log out
   };
-
-  // Function to capitalize the first letter of every word
-function capitalizeWords(str) {
-  return str
-    .split(' ') // Split the string into an array of words
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize the first letter of each word
-    .join(' '); // Join the words back into a single string
-}
 
   useEffect(() => {
     const fetchWeather = async () => {
@@ -31,6 +26,11 @@ function capitalizeWords(str) {
 
         const data = await response.json();
         setWeather(data);
+
+        // Translate the weather description
+        const translated = await translateText(data.weather[0].description, language);
+        setTranslatedWeather(translated || data.weather[0].description);
+
         setWeatherError(false); // Reset error state if successful
       } catch (error) {
         console.error('Error fetching weather data:', error);
@@ -39,7 +39,7 @@ function capitalizeWords(str) {
     };
 
     fetchWeather();
-  }, []);
+  }, [language]); // Re-fetch weather when language changes
 
   return (
     <nav className="nav-bar">
@@ -66,12 +66,26 @@ function capitalizeWords(str) {
           <span>Error loading weather</span>
         ) : weather ? (
           <span>
-            🌡 {Math.round(9 / 5 * (weather.main?.temp) + 32)}°F |{' '}
-            {capitalizeWords(weather.weather?.[0]?.description)}
+            🌡 {Math.round(9 / 5 * (weather.main?.temp) + 32)}°F | {translatedWeather}
           </span>
         ) : (
           <span>Loading weather...</span>
         )}
+      </div>
+
+      {/* Language selector */}
+      <div className="language-selector">
+        <label htmlFor="language">Language:</label>
+        <select
+          id="language"
+          value={language}
+          onChange={(e) => setLanguage(e.target.value)}
+        >
+          <option value="es">Spanish</option>
+          <option value="fr">French</option>
+          <option value="de">German</option>
+          <option value="zh">Chinese</option>
+        </select>
       </div>
     </nav>
   );

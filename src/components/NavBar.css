@@ -42,3 +42,18 @@
   font-size: 16px;
   font-weight: bold;
 }
+
+.language-selector {
+  margin-left: 20px;
+  color: #ffa94d;
+  font-size: 16px;
+}
+
+.language-selector select {
+  margin-left: 8px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ffa94d;
+  background-color: #111;
+  color: #ffa94d;
+}
