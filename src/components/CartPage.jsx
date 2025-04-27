@@ -39,10 +39,10 @@ const CartPage = () => {
         selectedItems,   // e.g. [2, 39, 36, 10, 12]
       };
 
-      console.log('🛒 Sending order payload:', payload);
+      console.log('🛒 Sending order payload:', payload); 
       await axios.post('https://leboba.onrender.com/api/orders', payload);
 
-      alert('✅ Order placed successfully!');
+      alert('✅ Order placed successfully!'); //confirmation so we dont have to check the database
       clearCart();
     } catch (err) {
       console.error('❌ Error placing order:', err);
