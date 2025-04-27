@@ -1,19 +1,29 @@
 import React from 'react';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const GoogleLoginComponent = ({ setUserName }) => {
+const GoogleLoginComponent = ({ setUserName, setUserEmail }) => {
+  const navigate = useNavigate();
+
   const handleLoginSuccess = async (credentialResponse) => {
     const idToken = credentialResponse.credential;
 
     try {
       // Send the ID token to your backend
-      const response = await axios.post('https://leboba.onrender.com/auth/google', { idToken });
+      const response = await axios.post('http://localhost:3000/auth/google', { idToken });
       console.log('Backend response:', response.data);
 
-      // Update the user's name
-      setUserName(response.data.name); // Use the name field from the backend response
-      alert(`Login successful! Welcome, ${response.data.name}`);
+      // Update the user's name and email
+      setUserName(response.data.name);
+      setUserEmail(response.data.email);
+
+      // Redirect based on email
+      if (response.data.email === 'tylerr13@tamu.edu') {
+        navigate('/manager'); // Redirect to manager screen
+      } else {
+        navigate('/menu/1'); // Redirect to customer menu
+      }
     } catch (error) {
       console.error('Error during authentication:', error);
       alert('Login failed! Please try again.');

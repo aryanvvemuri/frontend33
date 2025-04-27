@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './NavBar.css';
 
-function NavBar({ userName, setUserName }) {
+function NavBar({ userName, setUserName, userEmail, setUserEmail }) {
   const [weather, setWeather] = useState(null); // State to store weather data
   const [weatherError, setWeatherError] = useState(false); // State to track errors
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    setUserName(null); // Clear the user's name to log out
+    setUserName(null); // Clear the user's name
+    setUserEmail(null); // Clear the user's email
+    navigate('/'); // Redirect to the main screen
   };
 
   // Function to capitalize the first letter of every word
-function capitalizeWords(str) {
-  return str
-    .split(' ') // Split the string into an array of words
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize the first letter of each word
-    .join(' '); // Join the words back into a single string
-}
+  function capitalizeWords(str) {
+    return str
+      .split(' ') // Split the string into an array of words
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize the first letter of each word
+      .join(' '); // Join the words back into a single string
+  }
 
   useEffect(() => {
     const fetchWeather = async () => {
@@ -52,12 +55,17 @@ function capitalizeWords(str) {
       <div className="nav-links">
         <Link to="/menu/1">Menu</Link>
         <Link to="/cart">Cart</Link>
+        {userEmail === 'tylerr13@tamu.edu' && (
+          <>
+            <Link to="/manager">Manager</Link>
+            <Link to="/employee">Employee</Link>
+          </>
+        )}
         {userName ? (
           <button onClick={handleLogout} className="logout-link">Logout</button>
         ) : (
           <Link to="/login">Login</Link>
         )}
-        <Link to="/manager">Manager</Link>
       </div>
 
       {/* Weather information */}
