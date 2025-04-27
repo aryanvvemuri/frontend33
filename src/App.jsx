@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import MenuPage from './components/MenuPage';
 import CustomizePage from './components/CustomizePage';
@@ -12,6 +12,28 @@ function App() {
   const [userName, setUserName] = useState(null); // State to store the logged-in user's name
   const [userEmail, setUserEmail] = useState(null); // State to store the logged-in user's email
 
+  useEffect(() => {
+    const addGoogleTranslateScript = () => {
+      if (document.querySelector('script[src*="translate.google.com"]')) {
+        return;
+      }
+      
+      const script = document.createElement('script');
+      script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+      script.async = true;
+      document.body.appendChild(script);
+
+      window.googleTranslateElementInit = () => {
+        new window.google.translate.TranslateElement(
+          { pageLanguage: 'en' },
+          'google_translate_element'
+        );
+      };
+    };
+
+    addGoogleTranslateScript();
+  }, []);
+
   // List of approved manager emails
   const approvedManagers = [
     'tylerr13@tamu.edu',
@@ -24,6 +46,7 @@ function App() {
 
   return (
     <>
+      <div id="google_translate_element" style={{ position: 'fixed', top: '10px', left: '10px', zIndex: 1000 }}></div>
       <NavBar
         userName={userName}
         setUserName={setUserName}
