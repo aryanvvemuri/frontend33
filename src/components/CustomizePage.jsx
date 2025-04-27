@@ -16,11 +16,11 @@ const CustomizePage = () => {
   const [toppings, setToppings] = useState([]);
 
   useEffect(() => {
-    axios.get('https://lebobabackend.onrender.com/api/menu/items')
+    axios.get('https://leboba.onrender.com/api/menu/items')
       .then(res => setMenuItems(res.data))
       .catch(err => console.error('Failed to fetch menu items:', err));
 
-    axios.get(`https://lebobabackend.onrender.com/api/menu/item/${id}`)
+    axios.get(`https://leboba.onrender.com/api/menu/item/${id}`)
       .then(res => setItem(res.data))
       .catch(err => console.error('Failed to fetch item:', err));
   }, [id]);
