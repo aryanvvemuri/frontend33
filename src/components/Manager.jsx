@@ -40,7 +40,7 @@ function Manager() {
   };
 
   useEffect(() => {
-    axios.get('https://leboba.onrender.com/api/orders/getOrder')
+    axios.get('http://localhost:3000/api/orders/getOrder')
       .then(res => {
         setOrders(res.data.orders);
         const total = res.data.orders.reduce((sum, order) => sum + Number(order.totalprice), 0);
@@ -63,7 +63,7 @@ function Manager() {
 
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get('https://leboba.onrender.com/api/employees');
+      const res = await axios.get('http://localhost:3000/api/employees');
       setEmployees(res.data);
     } catch (err) {
       console.error('Error fetching employees:', err);
@@ -79,7 +79,7 @@ function Manager() {
   const handleAddEmployee = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('https://leboba.onrender.com/api/employees', {
+      await axios.post('http://localhost:3000/api/employees', {
         name: newEmployee.name,
         title: newEmployee.role,
       });
@@ -96,7 +96,7 @@ function Manager() {
     if (!window.confirm('Are you sure you want to delete this employee?')) return;
   
     try {
-      await axios.delete(`https://leboba.onrender.com/api/employees/${id}`);
+      await axios.delete(`http://localhost:3000/api/employees/${id}`);
       fetchEmployees();
     } catch (err) {
       console.error('Error deleting employee:', err);
@@ -108,19 +108,19 @@ function Manager() {
     e.preventDefault();
     try {
       // First check if ingredient exists
-      const response = await axios.get(`https://leboba.onrender.com/api/ingredients`);
+      const response = await axios.get(`http://localhost:3000/api/ingredients`);
       const existingIngredient = response.data.find(
         ing => ing.item.toLowerCase() === newIngredient.item.toLowerCase()
       );
 
       if (existingIngredient) {
         const newQuantity = Number(existingIngredient.quantity) + Number(newIngredient.quantity);
-        await axios.put(`https://leboba.onrender.com/api/ingredients/${existingIngredient.idinventory}`, {
+        await axios.put(`http://localhost:3000/api/ingredients/${existingIngredient.idinventory}`, {
           item: existingIngredient.item,
           quantity: newQuantity
         });
       } else {
-        await axios.post('https://leboba.onrender.com/api/ingredients', newIngredient);
+        await axios.post('http://localhost:3000/api/ingredients', newIngredient);
       }
       
       setNewIngredient({ item: '', quantity: '' });
