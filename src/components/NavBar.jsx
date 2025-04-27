@@ -55,7 +55,7 @@ function NavBar({ userName, setUserName, userEmail, setUserEmail }) {
       <div className="nav-links">
         <Link to="/menu/1">Menu</Link>
         <Link to="/cart">Cart</Link>
-        {userEmail === 'tylerr13@tamu.edu' && (
+        {userEmail === 'ranchhodshiv@tamu.edu' && (
           <>
             <Link to="/manager">Manager</Link>
             <Link to="/employee">Employee</Link>

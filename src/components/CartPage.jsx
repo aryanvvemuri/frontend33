@@ -40,7 +40,7 @@ const CartPage = () => {
       };
 
       console.log('🛒 Sending order payload:', payload);
-      await axios.post('https://leboba.onrender.com/api/orders', payload);
+      await axios.post('http://localhost:3000/api/orders', payload);
 
       alert('✅ Order placed successfully!');
       clearCart();

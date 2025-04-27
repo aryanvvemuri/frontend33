@@ -19,7 +19,7 @@ const GoogleLoginComponent = ({ setUserName, setUserEmail }) => {
       setUserEmail(response.data.email);
 
       // Redirect based on email
-      if (response.data.email === 'tylerr13@tamu.edu') {
+      if (response.data.email === 'ranchhodshiv@tamu.edu') {
         navigate('/manager'); // Redirect to manager screen
       } else {
         navigate('/menu/1'); // Redirect to customer menu

@@ -3,33 +3,34 @@ import axios from 'axios';
 import './Manager.css';
 
 function Manager() {
+  // Modals and dashboard states
   const [activeModal, setActiveModal] = useState(null);
   const [orders, setOrders] = useState([]);
   const [totalSales, setTotalSales] = useState(0);
   const [newIngredient, setNewIngredient] = useState({ item: '', quantity: '' });
 
-  //employee states
+  // Employee management states
   const [employees, setEmployees] = useState([]);
   const [newEmployee, setNewEmployee] = useState({ name: '', role: '' });
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Sales analysis
   const [hourlySales, setHourlySales] = useState([]);
 
+  // Helper to process sales data into hourly chunks
   const processHourlySales = (orders) => {
     const hourlyData = {};
     
     orders.forEach(order => {
       const orderHour = new Date(order.created_at).getHours();
       if (!hourlyData[orderHour]) {
-        hourlyData[orderHour] = {
-          total: 0,
-          count: 0
-        };
+        hourlyData[orderHour] = { total: 0, count: 0 };
       }
       hourlyData[orderHour].total += Number(order.totalprice);
       hourlyData[orderHour].count += 1;
     });
 
+    // Convert to sorted array for display
     return Object.entries(hourlyData)
       .map(([hour, data]) => ({
         hour: hour,
@@ -39,8 +40,9 @@ function Manager() {
       .sort((a, b) => a.hour - b.hour);
   };
 
+  // Fetch orders when the page first loads
   useEffect(() => {
-    axios.get('http://localhost:3000/api/orders/getOrder')
+    axios.get('https://leboba.onrender.com/api/orders/getOrder')
       .then(res => {
         setOrders(res.data.orders);
         const total = res.data.orders.reduce((sum, order) => sum + Number(order.totalprice), 0);
@@ -50,41 +52,46 @@ function Manager() {
       .catch(err => console.error('Failed to load orders:', err));
   }, []);
 
+  // Open specific modal
   const openModal = (modalType) => {
     setActiveModal(modalType);
     if (modalType === 'employee') {
-      fetchEmployees();
+      fetchEmployees(); // Only fetch employees when needed
     }
   };
 
+  // Close the modal
   const closeModal = () => {
     setActiveModal(null);
   };
 
+  // Fetch employee list from backend
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/employees');
+      const res = await axios.get('https://leboba.onrender.com/api/employees');
       setEmployees(res.data);
     } catch (err) {
       console.error('Error fetching employees:', err);
     }
   };
   
+  // Filter employees based on search query
   const filteredEmployees = employees.filter(emp =>
     emp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     emp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     emp.idemployee.toString().includes(searchQuery)
   );
   
+  // Add a new employee
   const handleAddEmployee = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:3000/api/employees', {
+      await axios.post('https://leboba.onrender.com/api/employees', {
         name: newEmployee.name,
         title: newEmployee.role,
       });
       setNewEmployee({ name: '', role: '' });
-      fetchEmployees(); // refresh list
+      fetchEmployees(); // Refresh employee list after adding
       alert('Employee added!');
     } catch (err) {
       console.error('Error adding employee:', err);
@@ -92,35 +99,38 @@ function Manager() {
     }
   };  
   
+  // Delete an employee
   const handleDeleteEmployee = async (id) => {
     if (!window.confirm('Are you sure you want to delete this employee?')) return;
   
     try {
-      await axios.delete(`http://localhost:3000/api/employees/${id}`);
-      fetchEmployees();
+      await axios.delete(`https://leboba.onrender.com/api/employees/${id}`);
+      fetchEmployees(); // Refresh employee list after deleting
     } catch (err) {
       console.error('Error deleting employee:', err);
       alert('Failed to delete employee');
     }
   };  
 
+  // Add or update inventory
   const handleInventorySubmit = async (e) => {
     e.preventDefault();
     try {
-      // First check if ingredient exists
-      const response = await axios.get(`http://localhost:3000/api/ingredients`);
+      const response = await axios.get(`https://leboba.onrender.com/api/ingredients`);
       const existingIngredient = response.data.find(
         ing => ing.item.toLowerCase() === newIngredient.item.toLowerCase()
       );
 
       if (existingIngredient) {
+        // Update quantity if ingredient exists
         const newQuantity = Number(existingIngredient.quantity) + Number(newIngredient.quantity);
-        await axios.put(`http://localhost:3000/api/ingredients/${existingIngredient.idinventory}`, {
+        await axios.put(`https://leboba.onrender.com/api/ingredients/${existingIngredient.idinventory}`, {
           item: existingIngredient.item,
           quantity: newQuantity
         });
       } else {
-        await axios.post('http://localhost:3000/api/ingredients', newIngredient);
+        // Otherwise create a new ingredient
+        await axios.post('https://leboba.onrender.com/api/ingredients', newIngredient);
       }
       
       setNewIngredient({ item: '', quantity: '' });
@@ -135,6 +145,7 @@ function Manager() {
     <div className="manager-page">
       <h1>Manager Dashboard</h1>
       <div className="manager-content">
+        {/* Manager options: sales, inventory, employee */}
         <section className="manager-section clickable" onClick={() => openModal('sales')}>
           <h2>Sales Reports</h2>
           <div className="reports-container">
@@ -157,10 +168,13 @@ function Manager() {
         </section>
       </div>
 
+      {/* Modals appear based on activeModal */}
       {activeModal && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <button className="close-button" onClick={closeModal}>&times;</button>
+            
+            {/* Sales modal */}
             {activeModal === 'sales' && (
               <div className="modal-body">
                 <h2>Sales Reports</h2>
@@ -195,6 +209,8 @@ function Manager() {
                 </div>
               </div>
             )}
+
+            {/* Inventory modal */}
             {activeModal === 'inventory' && (
               <div className="modal-body">
                 <h2>Inventory Management</h2>
@@ -217,50 +233,54 @@ function Manager() {
                 </form>
               </div>
             )}
+
+            {/* Employee modal */}
             {activeModal === 'employee' && (
-  <div className="modal-body">
-    <h2>Employee Management</h2>
+              <div className="modal-body">
+                <h2>Employee Management</h2>
 
-    <form onSubmit={handleAddEmployee} className="inventory-form">
-      <input
-        type="text"
-        placeholder="Name"
-        value={newEmployee.name}
-        onChange={(e) => setNewEmployee({ ...newEmployee, name: e.target.value })}
-        required
-      />
-      <input
-        type="text"
-        placeholder="Role (e.g. Manager, Employee)"
-        value={newEmployee.role}
-        onChange={(e) => setNewEmployee({ ...newEmployee, role: e.target.value })}
-        required
-      />
-      <button type="submit" className="add-btn">Add Employee</button>
-    </form>
+                {/* Add employee form */}
+                <form onSubmit={handleAddEmployee} className="inventory-form">
+                  <input
+                    type="text"
+                    placeholder="Name"
+                    value={newEmployee.name}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, name: e.target.value })}
+                    required
+                  />
+                  <input
+                    type="text"
+                    placeholder="Role (e.g. Manager, Employee)"
+                    value={newEmployee.role}
+                    onChange={(e) => setNewEmployee({ ...newEmployee, role: e.target.value })}
+                    required
+                  />
+                  <button type="submit" className="add-btn">Add Employee</button>
+                </form>
 
-    <div className="employee-list">
-  <h3>Current Employees</h3>
-  {filteredEmployees.length === 0 ? (
-    <p style={{ color: "#444" }}>No employees found.</p>
-  ) : (
-    filteredEmployees.map(emp => (
-      <div key={emp.idemployee} className="employee-card">
-        <p><strong>ID:</strong> {emp.idemployee}</p>
-        <p><strong>Name:</strong> {emp.name}</p>
-        <p><strong>Role:</strong> {emp.title}</p>
-        <button
-          className="delete-btn"
-          onClick={() => handleDeleteEmployee(emp.idemployee)}
-        >
-          Delete
-        </button>
-      </div>
-    ))
-  )}
-</div>
-  </div>
-)}
+                {/* List current employees */}
+                <div className="employee-list">
+                  <h3>Current Employees</h3>
+                  {filteredEmployees.length === 0 ? (
+                    <p style={{ color: "#444" }}>No employees found.</p>
+                  ) : (
+                    filteredEmployees.map(emp => (
+                      <div key={emp.idemployee} className="employee-card">
+                        <p><strong>ID:</strong> {emp.idemployee}</p>
+                        <p><strong>Name:</strong> {emp.name}</p>
+                        <p><strong>Role:</strong> {emp.title}</p>
+                        <button
+                          className="delete-btn"
+                          onClick={() => handleDeleteEmployee(emp.idemployee)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
 
           </div>
         </div>
