@@ -19,11 +19,11 @@ const CustomizePage = () => {
 
   // Fetch menu items and the specific item to customize when the page loads
   useEffect(() => {
-    axios.get('http://localhost:3000/api/menu/items')
+    axios.get('https://leboba.onrender.com/api/menu/items')
       .then(res => setMenuItems(res.data))
       .catch(err => console.error('Failed to fetch menu items:', err));
 
-    axios.get(`http://localhost:3000/api/menu/item/${id}`)
+    axios.get(`https://leboba.onrender.com/api/menu/item/${id}`)
       .then(res => setItem(res.data))
       .catch(err => console.error('Failed to fetch item:', err));
   }, [id]);

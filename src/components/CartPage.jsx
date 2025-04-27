@@ -39,18 +39,13 @@ const CartPage = () => {
         selectedItems,   // e.g. [2, 39, 36, 10, 12]
       };
 
-<<<<<<< HEAD
-      console.log('🛒 Sending order payload:', payload);
-      await axios.post('http://localhost:3000/api/orders', payload);
-=======
-      console.log('🛒 Sending order payload:', payload); 
+      console.log(' Sending order payload:', payload);
       await axios.post('https://leboba.onrender.com/api/orders', payload);
->>>>>>> 74afc26b944c9ac39021d0bd55692598149fe50a
 
-      alert('✅ Order placed successfully!'); //confirmation so we dont have to check the database
+      alert(' Order placed successfully!'); //confirmation so we dont have to check the database
       clearCart();
     } catch (err) {
-      console.error('❌ Error placing order:', err);
+      console.error(' Error placing order:', err);
       alert('There was an issue placing your order.');
     }
   };

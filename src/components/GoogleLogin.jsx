@@ -11,7 +11,7 @@ const GoogleLoginComponent = ({ setUserName, setUserEmail }) => {
 
     try {
       // Send the ID token to your backend
-      const response = await axios.post('http://localhost:3000/auth/google', { idToken });
+      const response = await axios.post('https://leboba.onrender.com/auth/google', { idToken });
       console.log('Backend response:', response.data);
 
       // Update the user's name and email
