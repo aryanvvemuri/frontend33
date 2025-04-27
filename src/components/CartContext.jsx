@@ -11,7 +11,7 @@ export const CartProvider = ({ children }) => {
 
   //saving to localstorage
   useEffect(() => {
-    localStorage.setItem('leboba-cart', JSON.stringify(cartItems));
+    localStorage.setItem('leboba-cart', JSON.stringify(cartItems)); // you can think of it as cookies in a way
   }, [cartItems]);
 
   const addToCart = (item) => {
@@ -22,8 +22,8 @@ export const CartProvider = ({ children }) => {
     setCartItems((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const clearCart = () => {
-    setCartItems([]);
+  const clearCart = () => { // clear cart function
+    setCartItems([]); 
     localStorage.removeItem('leboba-cart'); // clear storage too
   };
 
