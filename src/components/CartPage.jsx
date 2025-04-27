@@ -5,38 +5,54 @@ import axios from 'axios';
 const CartPage = () => {
   const { cartItems, removeFromCart, clearCart } = useCart();
 
-  console.log('🧾 Current cart items:', cartItems); //debugging
-
+  // Compute total price
   const total = cartItems.reduce((sum, item) => sum + Number(item.price || 0), 0);
 
   const handlePlaceOrder = async () => {
-  try {
-    const allIds = cartItems.map(item => item.idmenu);
-    const total = cartItems.reduce((sum, item) => sum + Number(item.price || 0), 0);
+    try {
+      // Build one big array of all idmenu values (base + sweetness + ice + toppings)
+      const selectedItems = cartItems.flatMap(item => {
+        const ids = [];
+        // base drink
+        if (item.baseId) {
+          ids.push(item.baseId);
+        } else if (item.idmenu) {
+          ids.push(item.idmenu);
+        }
+        // sweetness choice
+        if (item.sweetness?.idmenu) {
+          ids.push(item.sweetness.idmenu);
+        }
+        // ice choice
+        if (item.ice?.idmenu) {
+          ids.push(item.ice.idmenu);
+        }
+        // any toppings
+        if (Array.isArray(item.toppings)) {
+          ids.push(...item.toppings.map(t => t.idmenu));
+        }
+        return ids;
+      });
 
-    const orderPayload = {
-      totalPrice: total,
-      selectedItems: allIds  // just the array of idmenu values
-    };
+      const payload = {
+        totalPrice: total,
+        selectedItems,   // e.g. [2, 39, 36, 10, 12]
+      };
 
-    console.log('📦 Final order to send:', orderPayload);
+      console.log('🛒 Sending order payload:', payload);
+      await axios.post('https://lebobabackend.onrender.com/api/orders', payload);
 
-    await axios.post('https://leboba.onrender.com/api/carts/add', orderPayload);
-    alert('✅ Order placed!');
-    clearCart();
-  } catch (err) {
-    console.error('❌ Error placing order:', err);
-    alert('Something went wrong placing your order.');
-  }
-};
-
-    
+      alert('✅ Order placed successfully!');
+      clearCart();
+    } catch (err) {
+      console.error('❌ Error placing order:', err);
+      alert('There was an issue placing your order.');
+    }
+  };
 
   return (
     <div className="cart-page">
       <h2>🛒 Your Cart</h2>
-      
-    <p style={{ color: 'limegreen' }}> Cart page loading success</p>
       {cartItems.length === 0 ? (
         <p>Your cart is empty.</p>
       ) : (
@@ -44,36 +60,23 @@ const CartPage = () => {
           <ul>
             {cartItems.map((item, i) => (
               <li key={i}>
-                <strong>{item.item}</strong> - ${Number(item.price)?.toFixed(2)}
+                <strong>{item.item}</strong> — ${Number(item.price)?.toFixed(2)}
                 <br />
-                Sweetness: {item.sweetness || 'N/A'}, Ice: {item.ice || 'N/A'}
+                Sweetness: {item.sweetness?.item || 'N/A'} · Ice: {item.ice?.item || 'N/A'}
                 {Array.isArray(item.toppings) && item.toppings.length > 0 && (
-                  <div>Toppings: {item.toppings.join(', ')}</div>
+                  <div>
+                    Toppings: {item.toppings.map(t => t.item).join(', ')}
+                  </div>
                 )}
-                <button
-                  onClick={() => {
-                    console.log(`🗑️ Removing item at index ${i}:`, item);
-                    removeFromCart(i);
-                  }}
-                >
-                  Remove
-                </button>
+                <button onClick={() => removeFromCart(i)}>Remove</button>
               </li>
             ))}
           </ul>
 
           <h3>Total: ${total.toFixed(2)}</h3>
-
           <div className="cart-actions">
             <button onClick={handlePlaceOrder}>Place Order</button>
-            <button
-              onClick={() => {
-                console.log('🧹 Clearing cart');
-                clearCart();
-              }}
-            >
-               Clear Cart
-            </button>
+            <button onClick={clearCart}>Clear Cart</button>
           </div>
         </>
       )}
@@ -82,4 +85,3 @@ const CartPage = () => {
 };
 
 export default CartPage;
-

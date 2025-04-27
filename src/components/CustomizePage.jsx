@@ -1,95 +1,98 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './CustomizePage.css';
-import { useCart } from '../components/CartContext';
+import { useCart } from './CartContext';
 
 const CustomizePage = () => {
   const { id } = useParams();
-  const { addToCart } = useCart(); // Hook from CartContext
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
 
-  const [item, setItem] = useState(null); // Current item
-  const [menuItems, setMenuItems] = useState([]); // All menu items for filtering toppings
-  const [sweetness, setSweetness] = useState('100%');
-  const [ice, setIce] = useState('Normal Ice');
+  const [item, setItem] = useState(null);
+  const [menuItems, setMenuItems] = useState([]);
+  const [sweetness, setSweetness] = useState({ idmenu: 38, item: "Normal Sugar" });
+  const [ice, setIce] = useState({ idmenu: 35, item: "Normal Ice" });
   const [toppings, setToppings] = useState([]);
 
-  // 1. Fetch the drink being customized
   useEffect(() => {
-    if (!id) {
-      console.error('Invalid ID:', id);
-      return;
-    }
+    axios.get('https://lebobabackend.onrender.com/api/menu/items')
+      .then(res => setMenuItems(res.data))
+      .catch(err => console.error('Failed to fetch menu items:', err));
 
-    axios
-      .get(`https://leboba.onrender.com/api/menu/item/${id}`)
-      .then((res) => setItem(res.data))
-      .catch((err) => console.error('Failed to fetch item:', err));
+    axios.get(`https://lebobabackend.onrender.com/api/menu/item/${id}`)
+      .then(res => setItem(res.data))
+      .catch(err => console.error('Failed to fetch item:', err));
   }, [id]);
 
-  // 2. Fetch full menu to extract topping options
-  useEffect(() => {
-    axios
-      .get('https://leboba.onrender.com/api/menu/items')
-      .then((res) => setMenuItems(res.data))
-      .catch((err) => console.error('Failed to fetch menu items:', err));
-  }, []);
-
-  // 3. Extract topping items by name
-  const toppingOptions = menuItems.filter(
-    (m) =>
-      m.item.toLowerCase().includes('tapioca') ||
-      m.item.toLowerCase().includes('popping') ||
-      m.item.toLowerCase().includes('jelly')
+  const toppingOptions = menuItems.filter(m =>
+    m.item.toLowerCase().includes('tapioca') ||
+    m.item.toLowerCase().includes('popping') ||
+    m.item.toLowerCase().includes('jelly')
   );
 
-  // 4. Toggle toppings (we use item.id or item.item for uniqueness)
+  const sugarOptions = {
+    "0%": { idmenu: 40, item: "No Sugar" },
+    "25%": { idmenu: 37, item: "Less Sugar" },
+    "50%": { idmenu: 39, item: "Half Sugar" },
+    "100%": { idmenu: 38, item: "Normal Sugar" }
+  };
+
+  const iceOptions = {
+    "No Ice": { idmenu: 41, item: "No Ice" },
+    "Less Ice": { idmenu: 34, item: "Less Ice" },
+    "Half Ice": { idmenu: 36, item: "Half Ice" },
+    "Normal Ice": { idmenu: 35, item: "Normal Ice" }
+  };
+
   const toggleTopping = (topping) => {
-    if (toppings.some((t) => t.item === topping.item)) {
-      setToppings(toppings.filter((t) => t.item !== topping.item));
+    if (toppings.some(t => t.idmenu === topping.idmenu)) {
+      setToppings(toppings.filter(t => t.idmenu !== topping.idmenu));
     } else {
       setToppings([...toppings, topping]);
     }
   };
 
-  // 5. Add custom drink to cart
   const handleAddToCart = () => {
+    if (!item) return;
+
     const customDrink = {
-      ...item,
-      sweetness,
-      ice,
-      toppings,
+      idmenu: item.idmenu,         
+      item: item.item,
+      price: Number(item.price),
+      sweetness: sweetness,
+      ice: ice,
+      toppings: toppings,
     };
 
     addToCart(customDrink);
-    console.log('Added to cart:', customDrink);
+    navigate('/cart');
   };
 
-  // Handle loading state
   if (!item) return <div>Loading...</div>;
 
   return (
     <div className="customize-page">
       <h2>🛠 Customize {item.item}</h2>
-      <p>{typeof item.price === 'number' ? `$${item.price.toFixed(2)}` : 'Price unavailable'}</p>
+      <p>${Number(item.price).toFixed(2)}</p>
 
       <div className="custom-section">
         <label>Sweetness:</label>
-        <select value={sweetness} onChange={(e) => setSweetness(e.target.value)}>
-          <option value="0%">0%</option>
-          <option value="50%">50%</option>
-          <option value="100%">100%</option>
-          <option value="125%">125%</option>
+        <select onChange={(e) => setSweetness(sugarOptions[e.target.value])} value={Object.keys(sugarOptions).find(key => sugarOptions[key].idmenu === sweetness.idmenu)}>
+          <option value="0%">0% (No Sugar)</option>
+          <option value="25%">25% (Less Sugar)</option>
+          <option value="50%">50% (Half Sugar)</option>
+          <option value="100%">100% (Normal Sugar)</option>
         </select>
       </div>
 
       <div className="custom-section">
         <label>Ice Level:</label>
-        <select value={ice} onChange={(e) => setIce(e.target.value)}>
-          <option>No Ice</option>
-          <option>Less Ice</option>
-          <option>Normal Ice</option>
-          <option>More Ice</option>
+        <select onChange={(e) => setIce(iceOptions[e.target.value])} value={Object.keys(iceOptions).find(key => iceOptions[key].idmenu === ice.idmenu)}>
+          <option value="No Ice">No Ice</option>
+          <option value="Less Ice">Less Ice</option>
+          <option value="Half Ice">Half Ice</option>
+          <option value="Normal Ice">Normal Ice</option>
         </select>
       </div>
 
@@ -99,7 +102,7 @@ const CustomizePage = () => {
           <div key={i}>
             <input
               type="checkbox"
-              checked={toppings.some((t) => t.item === top.item)}
+              checked={toppings.some(t => t.idmenu === top.idmenu)}
               onChange={() => toggleTopping(top)}
             />
             <span>{top.item}</span>
@@ -107,9 +110,7 @@ const CustomizePage = () => {
         ))}
       </div>
 
-      <button className="add-cart-btn" onClick={handleAddToCart}>
-        Add to Cart
-      </button>
+      <button className="add-cart-btn" onClick={handleAddToCart}>Add to Cart</button>
     </div>
   );
 };
