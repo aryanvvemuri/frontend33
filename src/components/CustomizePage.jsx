@@ -16,6 +16,8 @@ const CustomizePage = () => {
   const [sweetness, setSweetness] = useState({ idmenu: 38, item: "Normal Sugar" });
   const [ice, setIce] = useState({ idmenu: 35, item: "Normal Ice" });
   const [toppings, setToppings] = useState([]);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
 
   // Fetch menu items and the specific item to customize when the page loads
   useEffect(() => {
@@ -76,7 +78,8 @@ const CustomizePage = () => {
     };
 
     addToCart(customDrink); // Add drink to cart
-    navigate('/cart');      // Redirect to cart page
+    setShowConfirmation(true); // Show confirmation message
+    setTimeout(() => setShowConfirmation(false), 2000);
   };
 
   // Display loading state if item details are not fetched yet
@@ -129,6 +132,15 @@ const CustomizePage = () => {
           </div>
         ))}
       </div>
+      {showConfirmation && (
+  <div className="confirmation-message">
+    Added to cart!
+  </div>
+)}
+
+<button className="add-cart-btn" onClick={handleAddToCart}>
+  Add to Cart
+</button>
 
       {/* Add to cart button */}
       <button className="add-cart-btn" onClick={handleAddToCart}>
