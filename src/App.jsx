@@ -12,6 +12,16 @@ function App() {
   const [userName, setUserName] = useState(null); // State to store the logged-in user's name
   const [userEmail, setUserEmail] = useState(null); // State to store the logged-in user's email
 
+  // List of approved manager emails
+  const approvedManagers = [
+    'tylerr13@tamu.edu',
+    'ranchhodshiv@tamu.edu',
+    'avv123@tamu.edu',
+    'harsh_jan@tamu.edu',
+  ];
+
+  const isManager = approvedManagers.includes(userEmail); // Check if the email is in the list
+
   return (
     <>
       <NavBar
@@ -27,11 +37,11 @@ function App() {
         <Route path="/cart" element={<CartPage />} />
         <Route
           path="/manager"
-          element={userEmail === 'tylerr13@tamu.edu' ? <Manager /> : <LandingPage />}
+          element={isManager ? <Manager /> : <LandingPage />}
         />
         <Route
           path="/employee"
-          element={userEmail === 'tylerr13@tamu.edu' ? <div>Employee Screen</div> : <LandingPage />}
+          element={isManager ? <div>Employee Screen</div> : <LandingPage />}
         />
         <Route
           path="/login"
