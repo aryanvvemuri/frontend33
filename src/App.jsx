@@ -44,8 +44,6 @@ function App() {
 
   // Dynamically check if the user is a manager
   const isManager = useMemo(() => {
-    console.log('Checking if user is a manager...');
-    console.log(approvedManagers.includes(userEmail?.toLowerCase()));
     return userEmail ? approvedManagers.includes(userEmail.toLowerCase()) : false;
   }, [userEmail]);
 

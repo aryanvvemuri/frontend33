@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useCart } from './CartContext'; // Import the cart context
 import './NavBar.css';
 
 function NavBar({ userName, setUserName, userEmail, setUserEmail }) {
   const [weather, setWeather] = useState(null);
   const [weatherError, setWeatherError] = useState(false);
   const navigate = useNavigate();
+  const { cartItems } = useCart();
+
+
 
   const approvedManagers = [
     'tylerr13@tamu.edu',
@@ -57,7 +61,7 @@ function NavBar({ userName, setUserName, userEmail, setUserEmail }) {
       {/* Navigation links */}
       <div className="nav-links">
         <Link to="/menu/1">Menu</Link>
-        <Link to="/cart">Cart</Link>
+        <Link to="/cart">Cart {cartItems.length > 0 && `(${cartItems.length})`}</Link>
         {isManager && (
           <>
             <Link to="/manager">Manager</Link>

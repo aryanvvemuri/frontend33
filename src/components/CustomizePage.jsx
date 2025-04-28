@@ -138,15 +138,15 @@ const CustomizePage = () => {
   </div>
 )}
 
-<button className="add-cart-btn" onClick={handleAddToCart}>
-  Add to Cart
+<button className="add-cart-btn" onClick={() => navigate(-1)}>
+  Back
 </button>
 
-      {/* Add to cart button */}
-      <button className="add-cart-btn" onClick={handleAddToCart}>
-        Add to Cart
-      </button>
-    </div>
+{/* Add to cart button */}
+  <button className="add-cart-btn" onClick={handleAddToCart}>
+    Add to Cart
+  </button>
+</div>
   );
 };
 

@@ -32,9 +32,9 @@ function MenuPage() {
   // Categorize menu items based on name
   const categorizeItem = (name) => {
     const lowered = name.toLowerCase();
-    if (lowered.includes('milk tea')) {
+    if (lowered.includes('milk tea')){
       return 'Milk Tea';
-    } else if (lowered.includes('fruit tea') || lowered.includes('lemonade')) {
+    } else if (lowered.includes('tea') || lowered.includes('lemonade')) {
       return 'Fruit Tea';
     } else {
       return 'Food';
@@ -55,9 +55,9 @@ function MenuPage() {
   const handleQuickAdd = (item) => {
     const defaultItem = {
       ...item,
-      sweetness: 'Regular',
-      ice: 'Regular',
-      toppings: [],
+      sweetness: { idmenu: 38, item: "Normal Sugar" }, // Default sweetness
+      ice: { idmenu: 35, item: "Normal Ice" },         // Default ice
+      toppings: [],                                   // No toppings by default
     };
     addToCart(defaultItem);
     alert(`Added ${item.item} to cart!`);
@@ -82,7 +82,10 @@ function MenuPage() {
             <h4>{item.item}</h4>
             <p>${Number(item.price).toFixed(2)}</p>
             <div className="menu-buttons">
-              <button onClick={() => navigate(`/customize/${item.idmenu}`)}>Customize</button>
+              {/* Only show the "Customize" button if the item is not in the "Food" category */}
+              {categorizeItem(item.item) !== 'Food' && (
+                <button onClick={() => navigate(`/customize/${item.idmenu}`)}>Customize</button>
+              )}
               <button onClick={() => handleQuickAdd(item)}>Add to Cart</button>
             </div>
           </div>
