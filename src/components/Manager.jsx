@@ -49,7 +49,7 @@ function Manager() {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/orders/getOrder');
+      const res = await axios.get('https://leboba.onrender.com/api/orders/getOrder');
       setOrders(res.data.orders);
       const total = res.data.orders.reduce((sum, order) => sum + Number(order.totalprice), 0);
       setTotalSales(total);
@@ -61,7 +61,7 @@ function Manager() {
 
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/employees');
+      const res = await axios.get('https://leboba.onrender.com/api/employees');
       setEmployees(res.data);
     } catch (err) {
       console.error('Failed to load employees:', err);
@@ -70,7 +70,7 @@ function Manager() {
 
   const fetchInventory = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/inventory');
+      const res = await axios.get('https://leboba.onrender.com/api/inventory');
       setAllInventory(res.data);
     } catch (err) {
       console.error('Failed to load inventory:', err);
@@ -79,7 +79,7 @@ function Manager() {
 
   const fetchIngredients = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/ingredients');
+      const res = await axios.get('https://leboba.onrender.com/api/ingredients');
       setAllIngredients(res.data);
     } catch (err) {
       console.error('Failed to load ingredients:', err);
@@ -102,7 +102,7 @@ function Manager() {
   const handleAddEmployee = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:3000/api/employees', {
+      await axios.post('https://leboba.onrender.com/api/employees', {
         name: newEmployee.name,
         title: newEmployee.role
       });
@@ -118,7 +118,7 @@ function Manager() {
   const handleDeleteEmployee = async (id) => {
     if (!window.confirm('Are you sure you want to delete this employee?')) return;
     try {
-      await axios.delete(`http://localhost:3000/api/employees/${id}`);
+      await axios.delete(`https://leboba.onrender.com/api/employees/${id}`);
       fetchEmployees();
     } catch (err) {
       console.error('Error deleting employee:', err);
@@ -131,13 +131,13 @@ function Manager() {
   
     try {
       if (newIngredient.type === 'inventory') {
-        await axios.post('http://localhost:3000/api/inventory', {
+        await axios.post('https://leboba.onrender.com/api/inventory', {
           item: newIngredient.item,
           quantity: newIngredient.quantity
         });
         fetchInventory();
       } else if (newIngredient.type === 'ingredient') {
-        await axios.post('http://localhost:3000/api/ingredients', {
+        await axios.post('https://leboba.onrender.com/api/ingredients', {
           item: newIngredient.item,
           quantity: newIngredient.quantity
         });
@@ -163,7 +163,7 @@ function Manager() {
     console.log("INVENTORY ID:", id, "AMOUNT:", amount); // <--- ADD THIS
     if (isNaN(amount)) return alert('Invalid amount');
     try {
-      await axios.patch(`http://localhost:3000/api/inventory/${id}/add`, { amount });
+      await axios.patch(`https://leboba.onrender.com/api/inventory/${id}/add`, { amount });
       fetchInventory();
       alert('Inventory quantity updated!');
     } catch (error) {
@@ -179,7 +179,7 @@ function Manager() {
     const amount = Number(e.target.amount.value);
     if (isNaN(amount)) return alert('Invalid amount');
     try {
-      await axios.patch(`http://localhost:3000/api/ingredients/${id}/add`, { amount });
+      await axios.patch(`https://leboba.onrender.com/api/ingredients/${id}/add`, { amount });
       fetchIngredients();
       alert('Ingredient quantity updated!');
     } catch (err) {
@@ -191,7 +191,7 @@ function Manager() {
     if (!window.confirm('Are you sure you want to delete this inventory item?')) return;
   
     try {
-      await axios.delete(`http://localhost:3000/api/inventory/${id}`);
+      await axios.delete(`https://leboba.onrender.com/api/inventory/${id}`);
       fetchInventory(); // Refresh inventory
       alert('Inventory item deleted!');
     } catch (error) {
@@ -204,7 +204,7 @@ function Manager() {
     if (!window.confirm('Are you sure you want to delete this ingredient?')) return;
   
     try {
-      await axios.delete(`http://localhost:3000/api/ingredients/${id}`);
+      await axios.delete(`https://leboba.onrender.com/api/ingredients/${id}`);
       fetchIngredients(); // Refresh ingredients
       alert('Ingredient deleted!');
     } catch (error) {
@@ -216,19 +216,19 @@ function Manager() {
   const handleAddMenuItem = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:3000/api/menu/add', {
+      const res = await axios.post('https://leboba.onrender.com/api/menu/add', {
         item: newMenuItem.item,
         price: newMenuItem.price
       });
       const newItemId = res.data.idmenu;
       for (const ingredientId of selectedIngredients) {
-        await axios.post('http://localhost:3000/api/associations/menu-ingredients', {
+        await axios.post('https://leboba.onrender.com/api/associations/menu-ingredients', {
           idmenu: newItemId,
           idingredient: ingredientId
         });
       }
       for (const inventoryId of selectedInventory) {
-        await axios.post('http://localhost:3000/api/associations/menu-inventory', {
+        await axios.post('https://leboba.onrender.com/api/associations/menu-inventory', {
           idmenu: newItemId,
           idinventory: inventoryId
         });
