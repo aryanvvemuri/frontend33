@@ -3,27 +3,25 @@ import axios from 'axios';
 import './Manager.css';
 
 function Manager() {
-
   // ======= STATE VARIABLES =======
   const [activeModal, setActiveModal] = useState(null);
+
   const [orders, setOrders] = useState([]);
   const [totalSales, setTotalSales] = useState(0);
   const [hourlySales, setHourlySales] = useState([]);
-  
+
   const [employees, setEmployees] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [newEmployee, setNewEmployee] = useState({ name: '', role: '' });
-  
-  const [newIngredient, setNewIngredient] = useState({ item: '', quantity: '' });
+
+  const [newIngredient, setNewIngredient] = useState({ item: '', quantity: '', type: '' });
   const [allInventory, setAllInventory] = useState([]);
   const [allIngredients, setAllIngredients] = useState([]);
-  
+
+  const [menuItems, setMenuItems] = useState([]);
   const [newMenuItem, setNewMenuItem] = useState({ item: '', price: '' });
-  const [selectedIngredients, setSelectedIngredients] = useState([]);
-  const [selectedInventory, setSelectedInventory] = useState([]);
 
   // ======= UTILITY FUNCTIONS =======
-
   const processHourlySales = (orders) => {
     const hourlyData = {};
     orders.forEach(order => {
@@ -40,12 +38,14 @@ function Manager() {
   };
 
   // ======= DATA FETCHING =======
-
   useEffect(() => {
     fetchOrders();
     fetchIngredients();
     fetchInventory();
-  }, []);
+    if (activeModal === 'menu') {
+      fetchMenuItems();
+    }
+  }, [activeModal]);
 
   const fetchOrders = async () => {
     try {
@@ -86,8 +86,16 @@ function Manager() {
     }
   };
 
-  // ======= HANDLER FUNCTIONS =======
+  const fetchMenuItems = async () => {
+    try {
+      const res = await axios.get('https://leboba.onrender.com/api/menu/items');
+      setMenuItems(res.data);
+    } catch (err) {
+      console.error('Failed to load menu items:', err);
+    }
+  };
 
+  // ======= HANDLER FUNCTIONS =======
   const openModal = (modalType) => {
     setActiveModal(modalType);
     if (modalType === 'employee') {
@@ -120,6 +128,7 @@ function Manager() {
     try {
       await axios.delete(`https://leboba.onrender.com/api/employees/${id}`);
       fetchEmployees();
+      alert('Employee deleted successfully!');
     } catch (err) {
       console.error('Error deleting employee:', err);
       alert('Failed to delete employee');
@@ -128,7 +137,6 @@ function Manager() {
 
   const handleInventorySubmit = async (e) => {
     e.preventDefault();
-  
     try {
       if (newIngredient.type === 'inventory') {
         await axios.post('https://leboba.onrender.com/api/inventory', {
@@ -146,7 +154,6 @@ function Manager() {
         alert('Please select a type (Inventory or Ingredient)');
         return;
       }
-  
       setNewIngredient({ item: '', quantity: '', type: '' });
       alert('Item added successfully!');
     } catch (error) {
@@ -154,13 +161,10 @@ function Manager() {
       alert('Failed to add item');
     }
   };
-  
 
   const handleAddInventoryQuantity = async (e, id) => {
     e.preventDefault();
-    e.stopPropagation() // so it doesnt double use yk
     const amount = Number(e.target.amount.value);
-    console.log("INVENTORY ID:", id, "AMOUNT:", amount); // <--- ADD THIS
     if (isNaN(amount)) return alert('Invalid amount');
     try {
       await axios.patch(`https://leboba.onrender.com/api/inventory/${id}/add`, { amount });
@@ -171,11 +175,9 @@ function Manager() {
       alert('Failed to update quantity');
     }
   };
-  
 
   const handleAddIngredientQuantity = async (e, id) => {
     e.preventDefault();
-    e.stopPropagation()
     const amount = Number(e.target.amount.value);
     if (isNaN(amount)) return alert('Invalid amount');
     try {
@@ -187,55 +189,40 @@ function Manager() {
       alert('Failed to update quantity');
     }
   };
+
   const handleDeleteInventoryItem = async (id) => {
     if (!window.confirm('Are you sure you want to delete this inventory item?')) return;
-  
     try {
       await axios.delete(`https://leboba.onrender.com/api/inventory/${id}`);
-      fetchInventory(); // Refresh inventory
+      fetchInventory();
       alert('Inventory item deleted!');
     } catch (error) {
       console.error('Error deleting inventory item:', error);
       alert('Failed to delete inventory item');
     }
   };
-  
+
   const handleDeleteIngredientItem = async (id) => {
     if (!window.confirm('Are you sure you want to delete this ingredient?')) return;
-  
     try {
       await axios.delete(`https://leboba.onrender.com/api/ingredients/${id}`);
-      fetchIngredients(); // Refresh ingredients
+      fetchIngredients();
       alert('Ingredient deleted!');
     } catch (error) {
       console.error('Error deleting ingredient:', error);
       alert('Failed to delete ingredient');
     }
   };
-  
+
   const handleAddMenuItem = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('https://leboba.onrender.com/api/menu/add', {
+      await axios.post('https://leboba.onrender.com/api/menu/add', {
         item: newMenuItem.item,
-        price: newMenuItem.price
+        price: parseFloat(newMenuItem.price)
       });
-      const newItemId = res.data.idmenu;
-      for (const ingredientId of selectedIngredients) {
-        await axios.post('https://leboba.onrender.com/api/associations/menu-ingredients', {
-          idmenu: newItemId,
-          idingredient: ingredientId
-        });
-      }
-      for (const inventoryId of selectedInventory) {
-        await axios.post('https://leboba.onrender.com/api/associations/menu-inventory', {
-          idmenu: newItemId,
-          idinventory: inventoryId
-        });
-      }
       setNewMenuItem({ item: '', price: '' });
-      setSelectedIngredients([]);
-      setSelectedInventory([]);
+      fetchMenuItems();
       alert('Menu item added successfully!');
     } catch (err) {
       console.error('Error adding menu item:', err);
@@ -243,8 +230,19 @@ function Manager() {
     }
   };
 
-  // ======= UI / RENDER =======
+  const handleDeleteMenuItem = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this menu item?')) return;
+    try {
+      await axios.delete(`https://leboba.onrender.com/api/menu/items/${id}`);
+      fetchMenuItems();
+      alert('Menu item deleted successfully!');
+    } catch (err) {
+      console.error('Error deleting menu item:', err);
+      alert('Failed to delete menu item');
+    }
+  };
 
+  // ======= UI / RENDER =======
   const filteredEmployees = employees.filter(emp =>
     emp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     emp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -255,7 +253,6 @@ function Manager() {
     <div className="manager-page">
       <h1>Manager Dashboard</h1>
 
-      {/* Main sections */}
       <div className="manager-content">
         <section className="manager-section clickable" onClick={() => openModal('sales')}>
           <h2>Sales Reports</h2>
@@ -275,25 +272,20 @@ function Manager() {
         </section>
       </div>
 
-      {/* Modal overlays */}
+      {/* Modal Content */}
       {activeModal && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="close-button" onClick={closeModal}>&times;</button>
 
-            {/* Modals */}
             {activeModal === 'sales' && (
               <div className="modal-body">
                 <h2>Sales Reports</h2>
-
-                {/* Sales Summary */}
                 <div className="sales-summary">
                   <h3>Last 24 Hours</h3>
                   <p>Total Sales: ${totalSales.toFixed(2)}</p>
                   <p>Number of Orders: {orders.length}</p>
                 </div>
-
-                {/* Sales by Hour */}
                 <div className="hourly-sales">
                   <h3>Sales by Hour</h3>
                   <div className="hourly-sales-grid">
@@ -306,8 +298,6 @@ function Manager() {
                     ))}
                   </div>
                 </div>
-
-                {/* Recent Orders */}
                 <div className="orders-list">
                   <h3>Recent Orders</h3>
                   {orders.map(order => (
@@ -321,51 +311,48 @@ function Manager() {
               </div>
             )}
 
-
             {activeModal === 'inventory' && (
               <div className="modal-body">
                 <h2>Inventory Management</h2>
-
-                {/* Add New Inventory Form */}
                 <form onSubmit={handleInventorySubmit} className="inventory-form">
-                <select
-                  value={newIngredient.type}
-                  onChange={(e) => setNewIngredient({ ...newIngredient, type: e.target.value })}
-                  required
-                  className="inventory-type-select"
-                >
-                  <option value="">Select Type</option>
-                  <option value="inventory">Inventory</option>
-                  <option value="ingredient">Ingredient</option>
-                </select>
+                  <select
+                    value={newIngredient.type}
+                    onChange={(e) => setNewIngredient({ ...newIngredient, type: e.target.value })}
+                    required
+                    className="inventory-type-select"
+                  >
+                    <option value="">Select Type</option>
+                    <option value="inventory">Inventory</option>
+                    <option value="ingredient">Ingredient</option>
+                  </select>
                   <input type="text" placeholder="Item name" value={newIngredient.item} onChange={(e) => setNewIngredient({ ...newIngredient, item: e.target.value })} required />
                   <input type="number" placeholder="Quantity" value={newIngredient.quantity} onChange={(e) => setNewIngredient({ ...newIngredient, quantity: e.target.value })} required />
                   <button type="submit" className="add-btn">Add New</button>
                 </form>
 
-                {/* Inventory List */}
+                {/* Inventory Items */}
                 <h3>Inventory Items</h3>
                 {allInventory.map(item => (
                   <div key={item.idinventory} className="item-card">
                     <p><strong>{item.item}</strong> — {item.quantity} units</p>
                     <form onSubmit={(e) => handleAddInventoryQuantity(e, item.idinventory)}>
-                    <input type="number" name="amount" placeholder="Amount to add" required className="quantity-input" />
-                    <button type="submit" className="add-btn">Add Quantity</button>
-                  </form>
-                  <button className="delete-btn" onClick={() => handleDeleteInventoryItem(item.idinventory)}>Delete Item</button>
+                      <input type="number" name="amount" placeholder="Amount to add" required className="quantity-input" />
+                      <button type="submit" className="add-btn">Add Quantity</button>
+                    </form>
+                    <button className="delete-btn" onClick={() => handleDeleteInventoryItem(item.idinventory)}>Delete Item</button>
                   </div>
                 ))}
 
-                {/* Ingredient List */}
+                {/* Ingredient Items */}
                 <h3>Ingredients</h3>
                 {allIngredients.map(item => (
-                  <div key={item.idinventory || item.idingredient} className="item-card">
+                  <div key={item.idingredient} className="item-card">
                     <p><strong>{item.item}</strong> — {item.quantity} units</p>
-                    <form onSubmit={(e) => handleAddIngredientQuantity(e, item.idinventory || item.idingredient)}>
-                    <input type="number" name="amount" placeholder="Amount to add" required className="quantity-input" />
-                    <button type="submit" className="add-btn">Add Quantity</button>
-                  </form>
-                  <button className="delete-btn" onClick={() => handleDeleteIngredientItem(item.idinventory || item.idingredient)}>Delete Item</button>
+                    <form onSubmit={(e) => handleAddIngredientQuantity(e, item.idingredient)}>
+                      <input type="number" name="amount" placeholder="Amount to add" required className="quantity-input" />
+                      <button type="submit" className="add-btn">Add Quantity</button>
+                    </form>
+                    <button className="delete-btn" onClick={() => handleDeleteIngredientItem(item.idingredient)}>Delete Item</button>
                   </div>
                 ))}
               </div>
@@ -383,6 +370,11 @@ function Manager() {
                     <button className="delete-btn" onClick={() => handleDeleteEmployee(emp.idemployee)}>Delete</button>
                   </div>
                 ))}
+                <form onSubmit={handleAddEmployee} className="inventory-form">
+                  <input type="text" placeholder="Name" value={newEmployee.name} onChange={(e) => setNewEmployee({ ...newEmployee, name: e.target.value })} required />
+                  <input type="text" placeholder="Role" value={newEmployee.role} onChange={(e) => setNewEmployee({ ...newEmployee, role: e.target.value })} required />
+                  <button type="submit" className="add-btn">Add Employee</button>
+                </form>
               </div>
             )}
 
@@ -394,9 +386,15 @@ function Manager() {
                   <input type="number" placeholder="Price" value={newMenuItem.price} onChange={(e) => setNewMenuItem({ ...newMenuItem, price: e.target.value })} required />
                   <button type="submit" className="add-btn">Add Menu Item</button>
                 </form>
+                <h3>Current Menu Items</h3>
+                {menuItems.map(menuItem => (
+                  <div key={menuItem.idmenu} className="item-card">
+                    <p><strong>{menuItem.item}</strong> — ${Number(menuItem.price).toFixed(2)}</p>
+                    <button className="delete-btn" onClick={() => handleDeleteMenuItem(menuItem.idmenu)}>Delete</button>
+                  </div>
+                ))}
               </div>
             )}
-
           </div>
         </div>
       )}
