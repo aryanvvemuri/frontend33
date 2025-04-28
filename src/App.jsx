@@ -53,7 +53,7 @@ function App() {
 
   return (
     <>
-      <div id="google_translate_element" style={{ position: 'fixed', top: '10px', left: '10px', zIndex: 1000 }}></div>
+      {/* <div id="google_translate_element" style={{ position: 'fixed', top: '10px', left: '10px', zIndex: 1000 }}></div> */}
       
       <NavBar
         userName={userName}
