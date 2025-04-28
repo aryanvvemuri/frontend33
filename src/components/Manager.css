@@ -1,69 +1,25 @@
+/* Manager main page layout */
 .manager-page {
   padding: 2rem;
 }
-.inventory-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  padding: 20px;
-}
 
-.inventory-form input {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
-.inventory-form .add-btn {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.inventory-form .add-btn:hover {
-  background-color: #45a049;
-}
-.sales-summary {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-.orders-list {
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-.order-item {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 10px;
-}
-
-.order-item p {
-  margin: 5px 0;
-}
+/* Container for all clickable sections */
 .manager-content {
   max-width: 1200px;
   margin: 0 auto;
 }
 
+/* Each section on the manager page (Sales, Inventory, Employees, Menu) */
 .manager-section {
   background-color: white;
-  color: #111; 
+  color: #111;
   border-radius: 8px;
   padding: 1.5rem;
   margin-bottom: 2rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-
+/* Titles */
 h1 {
   text-align: center;
   margin-bottom: 2rem;
@@ -74,6 +30,41 @@ h2 {
   margin-bottom: 1rem;
 }
 
+/* Sales Summary Box */
+.sales-summary {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+/* Inside sales summary box */
+.sales-summary p {
+  font-size: 1.1rem;
+  margin: 8px 0;
+  user-select: none; /* prevent selecting total sales and orders */
+  color: #333;
+  font-weight: 500;
+}
+
+/* Orders List Overflow */
+.orders-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Each individual order box */
+.order-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
+.order-item p {
+  margin: 5px 0;
+  color: #222; /* darker font for orders */
+}
+
+/* Hover animation for clickable sections */
 .clickable {
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
@@ -84,6 +75,7 @@ h2 {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Modal background overlay */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -97,6 +89,7 @@ h2 {
   z-index: 1000;
 }
 
+/* Modal popup box */
 .modal-content {
   background-color: white;
   padding: 2rem;
@@ -108,6 +101,7 @@ h2 {
   overflow-y: auto;
 }
 
+/* Close "X" button */
 .close-button {
   position: absolute;
   top: 10px;
@@ -124,15 +118,107 @@ h2 {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
+/* Main content inside the modal */
 .modal-body {
   margin-top: 20px;
 }
-.modal-content,
-.modal-body,
-.employee-list h3,
-.employee-card p {
-  color: #222 !important;
+
+/* Forms for adding new items/employees */
+.inventory-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px 0;
 }
+
+.inventory-form input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* Button for submitting form */
+.inventory-form .add-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.inventory-form .add-btn:hover {
+  background-color: #45a049;
+}
+
+/* Inventory and Ingredient lists */
+.item-list {
+  margin-top: 20px;
+}
+
+/* Each inventory or ingredient card */
+.item-card {
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Make inventory/ingredient names pop out */
+.item-card p {
+  color: #222; /* darker font for inventory/ingredient items */
+  font-weight: 600;
+}
+
+/* Input for adding extra quantity */
+.quantity-input {
+  padding: 8px;
+  margin-top: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 120px;
+}
+
+/* Sales by hour section */
+.hourly-sales {
+  margin-bottom: 2rem;
+}
+
+/* Grid for hourly sales */
+.hourly-sales-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+/* Each hourly sales item */
+.hourly-item {
+  background-color: #f1f1f1;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  color: #222; /* darker font for hourly sales */
+}
+
+/* Employee list section */
+.employee-list {
+  margin-top: 20px;
+}
+
+/* Each employee card */
+.employee-card {
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Delete button for employee */
 .delete-btn {
   background-color: #e74c3c;
   color: white;
@@ -146,4 +232,25 @@ h2 {
 
 .delete-btn:hover {
   background-color: #c0392b;
+}
+/* Headings inside modals */
+.modal-body h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  user-select: none; /* prevent selecting with mouse */
+  color: #111;
+}
+
+/* Make order divider line stronger */
+.order-item {
+  border-bottom: 1px solid #ccc;
+}
+
+.inventory-type-select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-bottom: 10px;
 }

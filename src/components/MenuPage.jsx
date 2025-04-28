@@ -12,7 +12,7 @@ function MenuPage() {
 
   useEffect(() => {
     // Fetch all menu items when the page loads
-    axios.get('https://leboba.onrender.com/api/menu/items')
+    axios.get('http://localhost:3000/api/menu/items')
       .then(res => {
         const allItems = res.data.filter(item => !isExcluded(item.item));
         setMenuItems(allItems);
