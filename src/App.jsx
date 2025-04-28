@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import MenuPage from './components/MenuPage';
 import CustomizePage from './components/CustomizePage';
@@ -42,17 +42,26 @@ function App() {
     'harsh_jan@tamu.edu',
   ];
 
-  const isManager = approvedManagers.includes(userEmail); // Check if the email is in the list
+  // Dynamically check if the user is a manager
+  const isManager = useMemo(() => {
+    console.log('Checking if user is a manager...');
+    console.log(approvedManagers.includes(userEmail?.toLowerCase()));
+    return userEmail ? approvedManagers.includes(userEmail.toLowerCase()) : false;
+  }, [userEmail]);
+
+  console.log('User Email:', userEmail);
 
   return (
     <>
       <div id="google_translate_element" style={{ position: 'fixed', top: '10px', left: '10px', zIndex: 1000 }}></div>
+      
       <NavBar
         userName={userName}
         setUserName={setUserName}
         userEmail={userEmail}
         setUserEmail={setUserEmail}
       />
+
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/menu/:categoryId" element={<MenuPage />} />

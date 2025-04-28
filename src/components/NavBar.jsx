@@ -7,6 +7,14 @@ function NavBar({ userName, setUserName, userEmail, setUserEmail }) {
   const [weatherError, setWeatherError] = useState(false); // State to track errors
   const navigate = useNavigate();
 
+  // List of approved manager emails
+  const approvedManagers = [
+    'tylerr13@tamu.edu',
+    'ranchhodshiv@tamu.edu',
+    'avv123@tamu.edu',
+    'harsh_jan@tamu.edu',
+  ];
+
   const handleLogout = () => {
     setUserName(null); // Clear the user's name
     setUserEmail(null); // Clear the user's email
@@ -44,6 +52,8 @@ function NavBar({ userName, setUserName, userEmail, setUserEmail }) {
     fetchWeather();
   }, []);
 
+  const isManager = userEmail && approvedManagers.includes(userEmail.toLowerCase());
+
   return (
     <nav className="nav-bar">
       {/* Display user's name styled like buttons */}
@@ -55,7 +65,7 @@ function NavBar({ userName, setUserName, userEmail, setUserEmail }) {
       <div className="nav-links">
         <Link to="/menu/1">Menu</Link>
         <Link to="/cart">Cart</Link>
-        {userEmail === 'ranchhodshiv@tamu.edu' && (
+        {isManager && (
           <>
             <Link to="/manager">Manager</Link>
             <Link to="/employee">Employee</Link>
