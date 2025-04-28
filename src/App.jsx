@@ -44,8 +44,6 @@ function App() {
 
   // Dynamically check if the user is a manager
   const isManager = useMemo(() => {
-    console.log('Checking if user is a manager...');
-    console.log(approvedManagers.includes(userEmail?.toLowerCase()));
     return userEmail ? approvedManagers.includes(userEmail.toLowerCase()) : false;
   }, [userEmail]);
 
@@ -53,7 +51,7 @@ function App() {
 
   return (
     <>
-      <div id="google_translate_element" style={{ position: 'fixed', top: '10px', left: '10px', zIndex: 1000 }}></div>
+      {/* <div id="google_translate_element" style={{ position: 'fixed', top: '10px', left: '10px', zIndex: 1000 }}></div> */}
       
       <NavBar
         userName={userName}
