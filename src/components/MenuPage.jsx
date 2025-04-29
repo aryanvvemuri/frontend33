@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from './CartContext';
 import './MenuPage.css';
+import bobaImage from '../assets/boba.png'; // Add this import at the top
 
 function MenuPage() {
   const [menuItems, setMenuItems] = useState([]);
@@ -10,8 +11,8 @@ function MenuPage() {
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
-  // Add default image URL
-  const defaultImageUrl = 'https://via.placeholder.com/150?text=No+Image';
+  // Update the default image URL to use local boba.png
+  const defaultImageUrl = bobaImage;
 
   useEffect(() => {
     // Fetch all menu items when the page loads
