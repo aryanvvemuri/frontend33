@@ -10,6 +10,9 @@ function MenuPage() {
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
+  // Add default image URL
+  const defaultImageUrl = 'https://via.placeholder.com/150?text=No+Image';
+
   useEffect(() => {
     // Fetch all menu items when the page loads
     axios.get('https://leboba.onrender.com/api/menu/items')
@@ -65,7 +68,7 @@ function MenuPage() {
 
   return (
     <div className="menu-page">
-      <h2 className="menu-title">Explore Our Menu</h2>
+      <h2>🍹 Select Your Menu Item</h2>
 
       {/* Category selection bar */}
       <div className="category-bar">
@@ -79,6 +82,14 @@ function MenuPage() {
       <div className="menu-grid">
         {filteredItems.map(item => (
           <div className="menu-card" key={item.idmenu}>
+            <img 
+              src={item.image_url || defaultImageUrl} 
+              alt={item.item}
+              className="menu-item-image"
+              onError={(e) => {
+                e.target.src = defaultImageUrl;
+              }}
+            />
             <h4>{item.item}</h4>
             <p>${Number(item.price).toFixed(2)}</p>
             <div className="menu-buttons">
@@ -91,6 +102,7 @@ function MenuPage() {
           </div>
         ))}
       </div>
+      <button className="back-btn" onClick={() => navigate('/')}> Back</button>
     </div>
   );
 }
