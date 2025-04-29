@@ -67,21 +67,41 @@ function Manager() {
 
   const calculateInventoryUsage = (orders) => {
     const usage = {};
-    orders.forEach(order => {
-      // Parse the order details from JSON string if it exists
-      let orderItems = [];
-      try {
-        if (order.orderdetails) {
-          orderItems = JSON.parse(order.orderdetails);
-        }
-      } catch (e) {
-        console.error('Error parsing order details:', e);
-        return;
-      }
+    
+    // Menu ID to name mapping
+    const menuMap = {
+      1: "Classic Milk Tea",
+      2: "Coconut Milk Tea", 
+      3: "Almond Milk Tea",
+      4: "Matcha Milk Tea",
+      5: "Mango and Passion Fruit Tea",
+      6: "Mango Green Tea",
+      7: "Kiwi Fruit Tea",
+      8: "Tropical Fruit Tea",
+      9: "Tapioca Pearls",
+      10: "Lychee Jelly",
+      11: "Rainbow Jelly",
+      12: "Coffee Jelly",
+      13: "Strawberry Popping Boba",
+      14: "Mango Popping Boba",
+      15: "Lychee Popping Boba",
+      16: "Red Bean Ice Cream",
+      17: "Nutella Kaiyaki",
+      18: "Crispy Puffs",
+      19: "Dumplings",
+      33: "Seasonal Tigers Blood Lemonade"
+    };
 
-      // Process each item in the order
-      orderItems.forEach(item => {
-        const recipe = drinkRecipes[item.name];
+    orders.forEach(order => {
+      // Process each menu item in the order
+      order.idmenu.forEach(menuId => {
+        // Skip ice/sugar options
+        if (menuId >= 34 && menuId <= 39) return;
+        
+        const itemName = menuMap[menuId];
+        if (!itemName) return;
+
+        const recipe = drinkRecipes[itemName];
         if (recipe) {
           Object.entries(recipe).forEach(([ingredient, amount]) => {
             usage[ingredient] = (usage[ingredient] || 0) + amount;
@@ -90,7 +110,6 @@ function Manager() {
       });
     });
 
-    // Convert to format needed for chart
     return usage;
   };
 

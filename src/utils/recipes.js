@@ -47,10 +47,15 @@ export const drinkRecipes = {
     "tigers blood": 60,
     lemon: 30,
     sugar: 15
+  },
+  "Crispy Puffs": {
+    "crispy puff": 1
+  },
+  "Dumplings": {
+    dumpling: 1
   }
 };
 
-// Toppings amounts per serving
 export const toppingsRecipes = {
   "Tapioca Pearls": {
     "tapioca pearl": 1
@@ -69,6 +74,9 @@ export const toppingsRecipes = {
   },
   "Mango Popping Boba": {
     "mango boba": 1
+  },
+  "Lychee Popping Boba": {
+    "lychee": 1
   }
 };
 
