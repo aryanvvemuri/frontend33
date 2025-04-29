@@ -291,3 +291,8 @@ h2 {
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
+.modal-content .inventory-usage,
+.modal-content .inventory-usage * {
+  color: #000 !important;
+}
