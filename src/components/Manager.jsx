@@ -94,10 +94,13 @@ function Manager() {
       
       // Filter orders based on date range
       const filteredOrders = res.data.orders.filter(order => {
+        // Parse ISO timestamp
         const orderDate = new Date(order.created_at);
+        // Create start date at beginning of day (00:00:00)
         const startDate = new Date(dateRange.start);
+        startDate.setHours(0, 0, 0, 0);
+        // Create end date at end of day (23:59:59.999)
         const endDate = new Date(dateRange.end);
-        // Set end date to end of day
         endDate.setHours(23, 59, 59, 999);
         
         return orderDate >= startDate && orderDate <= endDate;
