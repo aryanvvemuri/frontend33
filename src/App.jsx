@@ -7,6 +7,11 @@ import NavBar from './components/NavBar';
 import GoogleLoginComponent from './components/GoogleLogin';
 import Manager from './components/Manager';
 import LandingPage from './components/LandingPage';
+import EmployeeMenu from './components/employees/EmployeeMenu';
+import EmployeeCartPage from './components/employees/EmployeeCartPage';
+import EmployeeNavBar from './components/employees/EmployeeNavBar';
+import EmployeeLandingPage from './components/employees/EmployeeLandingPage';
+import EmployeeCustomizePage from './components/employees/EmployeeCustomizePage';
 
 function App() {
   const [userName, setUserName] = useState(null); // State to store the logged-in user's name
@@ -69,14 +74,18 @@ function App() {
           path="/manager"
           element={isManager ? <Manager /> : <LandingPage />}
         />
-        <Route
-          path="/employee"
-          element={isManager ? <div>Employee Screen</div> : <LandingPage />}
-        />
+
+
         <Route
           path="/login"
           element={<GoogleLoginComponent setUserName={setUserName} setUserEmail={setUserEmail} />}
         />
+        
+        <Route path="/employee/menu" element={<EmployeeMenu />} />
+        <Route path="/employee/cart" element={<EmployeeCartPage />} />
+        <Route path="/employee" element={<EmployeeLandingPage />} />
+        
+        <Route path="/employee/customize/:id" element={<EmployeeCustomizePage />} />
       </Routes>
     </>
   );

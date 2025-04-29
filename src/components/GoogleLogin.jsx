@@ -19,7 +19,7 @@ const GoogleLoginComponent = ({ setUserName, setUserEmail }) => {
       setUserEmail(response.data.email);
 
       // Redirect based on email
-      if (response.data.email === 'ranchhodshiv@tamu.edu') {
+      if (response.data.email === 'harsh_jan@tamu.edu') {
         navigate('/manager'); // Redirect to manager screen
       } else {
         navigate('/menu/1'); // Redirect to customer menu
@@ -38,6 +38,10 @@ const GoogleLoginComponent = ({ setUserName, setUserEmail }) => {
           onSuccess={handleLoginSuccess}
           onError={() => console.error('Login Failed')}
         />
+         {/* Temporary Button to go directly to Employee page */}
+      <button onClick={() => navigate('/employee')} style={{ marginTop: '20px' }}>
+        Enter Employee Page (Dev Mode)
+      </button>
       </div>
     </GoogleOAuthProvider>
   );

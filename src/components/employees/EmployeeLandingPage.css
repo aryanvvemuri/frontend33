@@ -1,0 +1,27 @@
+.landing-page {
+    text-align: center;
+    margin-top: 100px;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  
+  .landing-buttons {
+    margin-top: 30px;
+  }
+  
+  .landing-buttons button {
+    padding: 10px 24px;
+    margin: 10px;
+    font-size: 16px;
+    background-color: #2d3748; /* dark gray-blue */
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .landing-buttons button:hover {
+    background-color: #1a202c; /* darker gray-blue */
+  }
+  
