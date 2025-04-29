@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from './CartContext'; // Import the cart context
 import './NavBar.css';
 
@@ -7,9 +7,13 @@ function NavBar({ userName, setUserName, userEmail, setUserEmail }) {
   const [weather, setWeather] = useState(null);
   const [weatherError, setWeatherError] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { cartItems } = useCart();
 
-
+  // 🚫 Don't show this NavBar on /employee pages
+  if (location.pathname.startsWith('/employee')) {
+    return null;
+  }
 
   const approvedManagers = [
     'tylerr13@tamu.edu',

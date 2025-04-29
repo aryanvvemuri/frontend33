@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../CartContext'; // Assuming same shared context
-import './EmployeeNavBar.css'; // You can keep using this or create EmployeeNavBar.css
+import './EmployeeNavBar.css';
 
 function EmployeeNavBar() {
   const { cartItems } = useCart();

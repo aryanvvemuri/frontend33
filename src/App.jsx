@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom'; // ✅ add useLocation
 import MenuPage from './components/MenuPage';
 import CustomizePage from './components/CustomizePage';
 import CartPage from './components/CartPage';
@@ -14,15 +14,15 @@ import EmployeeLandingPage from './components/employees/EmployeeLandingPage';
 import EmployeeCustomizePage from './components/employees/EmployeeCustomizePage';
 
 function App() {
-  const [userName, setUserName] = useState(null); // State to store the logged-in user's name
-  const [userEmail, setUserEmail] = useState(null); // State to store the logged-in user's email
+  const [userName, setUserName] = useState(null);
+  const [userEmail, setUserEmail] = useState(null);
+  const location = useLocation(); // ✅ add this
+  const isEmployeePage = location.pathname.startsWith('/employee'); // ✅
 
   useEffect(() => {
     const addGoogleTranslateScript = () => {
-      if (document.querySelector('script[src*="translate.google.com"]')) {
-        return;
-      }
-      
+      if (document.querySelector('script[src*="translate.google.com"]')) return;
+
       const script = document.createElement('script');
       script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
       script.async = true;
@@ -39,7 +39,6 @@ function App() {
     addGoogleTranslateScript();
   }, []);
 
-  // List of approved manager emails
   const approvedManagers = [
     'tylerr13@tamu.edu',
     'ranchhodshiv@tamu.edu',
@@ -47,23 +46,28 @@ function App() {
     'harsh_jan@tamu.edu',
   ];
 
-  // Dynamically check if the user is a manager
   const isManager = useMemo(() => {
     return userEmail ? approvedManagers.includes(userEmail.toLowerCase()) : false;
   }, [userEmail]);
 
-  console.log('User Email:', userEmail);
-
   return (
     <>
-      {/* <div id="google_translate_element" style={{ position: 'fixed', top: '10px', left: '10px', zIndex: 1000 }}></div> */}
-      
-      <NavBar
-        userName={userName}
-        setUserName={setUserName}
-        userEmail={userEmail}
-        setUserEmail={setUserEmail}
-      />
+      {/* ✅ Only show NavBar if not on employee pages */}
+      {!isEmployeePage && (
+        <>
+        <NavBar
+          userName={userName}
+          setUserName={setUserName}
+          userEmail={userEmail}
+          setUserEmail={setUserEmail}
+        />
+         {/* ✅ Google Translate dropdown container */}
+         <div
+         id="google_translate_element"
+         style={{ position: 'fixed', top: '10px', left: '10px', zIndex: 1000 }}
+       />
+     </>
+    )}
 
       <Routes>
         <Route path="/" element={<LandingPage />} />
@@ -74,17 +78,15 @@ function App() {
           path="/manager"
           element={isManager ? <Manager /> : <LandingPage />}
         />
-
-
         <Route
           path="/login"
           element={<GoogleLoginComponent setUserName={setUserName} setUserEmail={setUserEmail} />}
         />
-        
+
+        {/* ✅ Employee routes */}
+        <Route path="/employee" element={<EmployeeLandingPage />} />
         <Route path="/employee/menu" element={<EmployeeMenu />} />
         <Route path="/employee/cart" element={<EmployeeCartPage />} />
-        <Route path="/employee" element={<EmployeeLandingPage />} />
-        
         <Route path="/employee/customize/:id" element={<EmployeeCustomizePage />} />
       </Routes>
     </>
