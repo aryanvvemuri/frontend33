@@ -48,7 +48,18 @@ import React, { useState, useEffect } from 'react';
  
    const [menuItems, setMenuItems] = useState([]);
    const [newMenuItem, setNewMenuItem] = useState({ item: '', price: '' });
- 
+   const [lastZReportTime, setLastZReportTime] = useState(() => {
+    const saved = localStorage.getItem('lastZReportTime');
+    return saved ? new Date(saved) : (() => {
+      const t = new Date();
+      t.setHours(0, 0, 0, 0);
+      return t;
+    })();
+  });
+  
+  const [zReportOrders, setZReportOrders] = useState([]);
+  const [zTotalSales, setZTotalSales] = useState(0);
+  
    // ======= UTILITY FUNCTIONS =======
    const processHourlySales = (orders) => {
      const hourlyData = {};
@@ -125,7 +136,7 @@ import React, { useState, useEffect } from 'react';
  
    const fetchOrders = async () => {
      try {
-       const res = await axios.get('https://leboba.onrender.com/api/orders/getOrder');
+       const res = await axios.get('http://localhost:3000/api/orders/getOrder');
  
        // Filter orders based on date range
        const filteredOrders = res.data.orders.filter(order => {
@@ -153,7 +164,7 @@ import React, { useState, useEffect } from 'react';
  
    const fetchEmployees = async () => {
      try {
-       const res = await axios.get('https://leboba.onrender.com/api/employees');
+       const res = await axios.get('http://localhost:3000/api/employees');
        setEmployees(res.data);
      } catch (err) {
        console.error('Failed to load employees:', err);
@@ -162,7 +173,7 @@ import React, { useState, useEffect } from 'react';
  
    const fetchInventory = async () => {
      try {
-       const res = await axios.get('https://leboba.onrender.com/api/inventory');
+       const res = await axios.get('http://localhost:3000/api/inventory');
        setAllInventory(res.data);
      } catch (err) {
        console.error('Failed to load inventory:', err);
@@ -171,7 +182,7 @@ import React, { useState, useEffect } from 'react';
  
    const fetchIngredients = async () => {
      try {
-       const res = await axios.get('https://leboba.onrender.com/api/ingredients');
+       const res = await axios.get('http://localhost:3000/api/ingredients');
        setAllIngredients(res.data);
      } catch (err) {
        console.error('Failed to load ingredients:', err);
@@ -180,7 +191,7 @@ import React, { useState, useEffect } from 'react';
  
    const fetchMenuItems = async () => {
      try {
-       const res = await axios.get('https://leboba.onrender.com/api/menu/items');
+       const res = await axios.get('http://localhost:3000/api/menu/items');
        setMenuItems(res.data);
      } catch (err) {
        console.error('Failed to load menu items:', err);
@@ -188,13 +199,12 @@ import React, { useState, useEffect } from 'react';
    };
  
    // ======= HANDLER FUNCTIONS =======
-   const openModal = (modalType) => {
-     setActiveModal(modalType);
-     if (modalType === 'employee') {
-       fetchEmployees();
-     }
-   };
- 
+   const openModal = async (modalType) => {
+    setActiveModal(modalType);
+    if (modalType === 'employee') {
+      fetchEmployees();
+    }
+  };  
    const closeModal = () => {
      setActiveModal(null);
    };
@@ -202,7 +212,7 @@ import React, { useState, useEffect } from 'react';
    const handleAddEmployee = async (e) => {
      e.preventDefault();
      try {
-       await axios.post('https://leboba.onrender.com/api/employees', {
+       await axios.post('http://localhost:3000/api/employees', {
          name: newEmployee.name,
          title: newEmployee.role
        });
@@ -218,7 +228,7 @@ import React, { useState, useEffect } from 'react';
    const handleDeleteEmployee = async (id) => {
      if (!window.confirm('Are you sure you want to delete this employee?')) return;
      try {
-       await axios.delete(`https://leboba.onrender.com/api/employees/${id}`);
+       await axios.delete(`http://localhost:3000/api/employees/${id}`);
        fetchEmployees();
        alert('Employee deleted successfully!');
      } catch (err) {
@@ -231,13 +241,13 @@ import React, { useState, useEffect } from 'react';
      e.preventDefault();
      try {
        if (newIngredient.type === 'inventory') {
-         await axios.post('https://leboba.onrender.com/api/inventory', {
+         await axios.post('http://localhost:3000/api/inventory', {
            item: newIngredient.item,
            quantity: newIngredient.quantity
          });
          fetchInventory();
        } else if (newIngredient.type === 'ingredient') {
-         await axios.post('https://leboba.onrender.com/api/ingredients', {
+         await axios.post('http://localhost:3000/api/ingredients', {
            item: newIngredient.item,
            quantity: newIngredient.quantity
          });
@@ -259,7 +269,7 @@ import React, { useState, useEffect } from 'react';
      const amount = Number(e.target.amount.value);
      if (isNaN(amount)) return alert('Invalid amount');
      try {
-       await axios.patch(`https://leboba.onrender.com/api/inventory/${id}/add`, { amount });
+       await axios.patch(`http://localhost:3000/api/inventory/${id}/add`, { amount });
        fetchInventory();
        alert('Inventory quantity updated!');
      } catch (error) {
@@ -273,7 +283,7 @@ import React, { useState, useEffect } from 'react';
      const amount = Number(e.target.amount.value);
      if (isNaN(amount)) return alert('Invalid amount');
      try {
-       await axios.patch(`https://leboba.onrender.com/api/ingredients/${id}/add`, { amount });
+       await axios.patch(`http://localhost:3000/api/ingredients/${id}/add`, { amount });
        fetchIngredients();
        alert('Ingredient quantity updated!');
      } catch (err) {
@@ -285,7 +295,7 @@ import React, { useState, useEffect } from 'react';
    const handleDeleteInventoryItem = async (id) => {
      if (!window.confirm('Are you sure you want to delete this inventory item?')) return;
      try {
-       await axios.delete(`https://leboba.onrender.com/api/inventory/${id}`);
+       await axios.delete(`http://localhost:3000/api/inventory/${id}`);
        fetchInventory();
        alert('Inventory item deleted!');
      } catch (error) {
@@ -297,7 +307,7 @@ import React, { useState, useEffect } from 'react';
    const handleDeleteIngredientItem = async (id) => {
      if (!window.confirm('Are you sure you want to delete this ingredient?')) return;
      try {
-       await axios.delete(`https://leboba.onrender.com/api/ingredients/${id}`);
+       await axios.delete(`http://localhost:3000/api/ingredients/${id}`);
        fetchIngredients();
        alert('Ingredient deleted!');
      } catch (error) {
@@ -313,14 +323,14 @@ import React, { useState, useEffect } from 'react';
  
        if (existingItem) {
          // If item exists, update both item name and price
-         await axios.put(`https://leboba.onrender.com/api/menu/${existingItem.idmenu}`, {
+         await axios.put(`http://localhost:3000/api/menu/${existingItem.idmenu}`, {
            item: existingItem.item, // must send the item name too!
            price: parseFloat(newMenuItem.price)
          });
          alert('Menu item price updated successfully!');
        } else {
          // If item doesn't exist, add new one
-         await axios.post('https://leboba.onrender.com/api/menu/add', {
+         await axios.post('http://localhost:3000/api/menu/add', {
            item: newMenuItem.item,
            price: parseFloat(newMenuItem.price)
          });
@@ -338,7 +348,7 @@ import React, { useState, useEffect } from 'react';
    const handleDeleteMenuItem = async (id) => {
      if (!window.confirm('Are you sure you want to delete this menu item?')) return;
      try {
-       await axios.delete(`https://leboba.onrender.com/api/menu/items/${id}`);
+       await axios.delete(`http://localhost:3000/api/menu/items/${id}`);
        fetchMenuItems();
        alert('Menu item deleted successfully!');
      } catch (err) {
@@ -360,7 +370,34 @@ import React, { useState, useEffect } from 'react';
        console.log('Calculated usage:', inventoryUsage);
      }
    }, [orders, inventoryUsage, activeModal]);
- 
+   useEffect(() => {
+    fetchOrders();
+  }, [lastZReportTime]);
+  useEffect(() => {
+    const fetchZReportOrders = async () => {
+      try {
+        const res = await axios.get('http://localhost:3000/api/orders/getOrder');
+        const newOrders = res.data.orders;
+        const savedTimeString = localStorage.getItem('lastZReportTime');
+        const savedTime = savedTimeString ? new Date(savedTimeString) : new Date(0);
+        const filtered = newOrders.filter(order => {
+          const orderDate = new Date(order.created_at);
+          return orderDate >= savedTime;
+        });
+  
+        setZReportOrders(filtered);
+        const total = filtered.reduce((sum, order) => sum + Number(order.totalprice), 0);
+        setZTotalSales(total);
+      } catch (err) {
+        console.error('Failed to load Z-Report orders:', err);
+      }
+    };
+  
+    if (activeModal === 'zreport') {
+      fetchZReportOrders();
+    }
+  }, [activeModal, lastZReportTime]);
+  
    return (
      <div className="manager-page">
        <h1>Manager Dashboard</h1>
@@ -370,6 +407,10 @@ import React, { useState, useEffect } from 'react';
            <h2>Sales Reports</h2>
            <p>Click to view sales reports</p>
          </section>
+         <section className="manager-section clickable" onClick={() => openModal('zreport')}>
+          <h2>Z-Report (End of Day)</h2>
+          <p>Click to generate end-of-day summary</p>
+        </section>
          <section className="manager-section clickable" onClick={() => openModal('inventory')}>
            <h2>Inventory Management</h2>
            <p>Click to manage inventory</p>
@@ -590,6 +631,39 @@ import React, { useState, useEffect } from 'react';
                  ))}
                </div>
              )}
+            {activeModal === 'zreport' && (
+              <div className="modal-body">
+                <h2>Z-Report (Since Last Finalization)</h2>
+
+                <div className="sales-summary">
+                  <p><strong>Total Sales (Since Last Report):</strong> ${zTotalSales.toFixed(2)}</p>
+                  <p><strong>Number of Orders:</strong> {zReportOrders.length}</p>
+                </div>
+
+                <div className="orders-list">
+                  <h3>Orders Since {lastZReportTime.toLocaleString()}</h3>
+                  {zReportOrders.map(order => (
+                    <div key={order.idorder} className="order-item">
+                      <p>Order #{order.idorder}</p>
+                      <p>Amount: ${Number(order.totalprice).toFixed(2)}</p>
+                      <p>Time: {new Date(order.created_at).toLocaleString()}</p>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  className="add-btn"
+                  style={{ marginTop: '1rem' }}
+                  onClick={async () => {
+                    const now = new Date();
+                    localStorage.setItem('lastZReportTime', now.toISOString());
+                    setLastZReportTime(now);  // Optional: only for UI updates
+                    setActiveModal(null);     // Close modal first
+                  }}
+                >
+                  Finalize Z-Report
+                </button>
+              </div>
+            )}
            </div>
          </div>
        )}
