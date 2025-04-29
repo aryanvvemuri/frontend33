@@ -51,20 +51,20 @@ function Manager() {
 
   // ======= UTILITY FUNCTIONS =======
   const processHourlySales = (orders) => {
-    const hourlyData = {};
+    const hourlyData = Array(24).fill(0).map(() => ({ total: 0, count: 0 }));
+  
     orders.forEach(order => {
-      const hour = new Date(order.created_at).getHours();
-      if (!hourlyData[hour]) {
-        hourlyData[hour] = { total: 0, count: 0 };
-      }
+      const hour = new Date(order.created_at).getHours(); // returns 0–23
       hourlyData[hour].total += Number(order.totalprice);
       hourlyData[hour].count += 1;
     });
-    return Object.entries(hourlyData)
-      .map(([hour, data]) => ({ hour, total: data.total, count: data.count }))
-      .sort((a, b) => a.hour - b.hour);
-  };
-
+  
+    return hourlyData.map((data, hour) => ({
+      hour,
+      total: data.total,
+      count: data.count
+    }));
+  };  
   const calculateInventoryUsage = (orders) => {
     const usage = {};
     
@@ -482,15 +482,50 @@ function Manager() {
                   <p>Number of Orders: {orders.length}</p>
                 </div>
                 <div className="hourly-sales">
-                  <h3>Sales by Hour(X-report)</h3>
-                  <div className="hourly-sales-grid">
-                    {hourlySales.map(({ hour, total, count }) => (
-                      <div key={hour} className="hourly-item">
-                        <h4>{hour}:00</h4>
-                        <p>Sales: ${total.toFixed(2)}</p>
-                        <p>Orders: {count}</p>
-                      </div>
-                    ))}
+                  <h3>X-Report (Sales by Hour)</h3>
+                  <div className="chart-container">
+                    <Line
+                      data={{
+                        labels: hourlySales.map(({ hour }) => `${hour}:00`),
+                        datasets: [
+                          {
+                            label: 'Sales ($)',
+                            data: hourlySales.map(({ total }) => total),
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            tension: 0.2,
+                            fill: true,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                          },
+                        ],
+                      }}
+                      options={{
+                        responsive: true,
+                        plugins: {
+                          legend: { position: 'top' },
+                          title: {
+                            display: true,
+                            text: 'Hourly Sales Total',
+                          },
+                        },
+                        scales: {
+                          y: {
+                            beginAtZero: true,
+                            title: {
+                              display: true,
+                              text: 'Sales ($)',
+                            },
+                          },
+                          x: {
+                            title: {
+                              display: true,
+                              text: 'Hour of Day',
+                            },
+                          },
+                        },
+                      }}
+                    />
                   </div>
                 </div>
                 <div className="orders-list">
