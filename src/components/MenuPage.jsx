@@ -66,7 +66,21 @@ function MenuPage() {
     addToCart(defaultItem);
     alert(`Added ${item.item} to cart!`);
   };
-
+  const emojiMap = {
+    'Classic Milk Tea': '🧋',
+    'Coconut Milk Tea': '🥥🧋',
+    'Almond Milk Tea': '🌰🧋',
+    'Matcha Milk Tea': '🍵',
+    'Mango and Passion Fruit Tea': '🥭🍈',
+    'Mango Green Tea': '🥭🍃',
+    'Kiwi Fruit Tea': '🥝',
+    'Tropical Fruit Tea': '🍍🍊',
+    'Nutella Kaiyaki': '🍫🐟',
+    'Crispy Puffs': '🥠',
+    'Dumplings': '🥟',
+    'Seasonal Tigers Blood Lemonade': '🍓🍉🍋',
+  };
+  
   return (
     <div className="menu-page">
       <h2>🍹 Select Your Menu Item</h2>
@@ -83,14 +97,10 @@ function MenuPage() {
       <div className="menu-grid">
         {filteredItems.map(item => (
           <div className="menu-card" key={item.idmenu}>
-            <img 
-              src={item.image_url || defaultImageUrl} 
-              alt={item.item}
-              className="menu-item-image"
-              onError={(e) => {
-                e.target.src = defaultImageUrl;
-              }}
-            />
+            <div className="emoji-icon">
+              {emojiMap[item.item] || '🧋'}
+              </div>
+
             <h4>{item.item}</h4>
             <p>${Number(item.price).toFixed(2)}</p>
             <div className="menu-buttons">
