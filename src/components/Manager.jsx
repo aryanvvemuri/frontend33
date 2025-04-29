@@ -2,6 +2,28 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Manager.css';
 import { drinkRecipes } from '../utils/recipes';
+import { Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
+
+// Register ChartJS components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 function Manager() {
   // ======= STATE VARIABLES =======
@@ -323,16 +345,69 @@ function Manager() {
                   <button onClick={fetchOrders}>Update Report</button>
                 </div>
 
-                {/* Add inventory usage section */}
                 <div className="inventory-usage">
-                  <h3>Inventory Usage</h3>
-                  <div className="usage-grid">
-                    {Object.entries(inventoryUsage).map(([ingredient, amount]) => (
-                      <div key={ingredient} className="usage-item">
-                        <h4>{ingredient}</h4>
-                        <p>{amount} units used</p>
-                      </div>
-                    ))}
+                  <h3>Inventory Usage Report</h3>
+                  <div className="chart-container">
+                    <Line
+                      data={{
+                        labels: Object.keys(inventoryUsage),
+                        datasets: [{
+                          label: 'Units Used',
+                          data: Object.values(inventoryUsage),
+                          borderColor: 'rgb(75, 192, 192)',
+                          backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                          tension: 0.1
+                        }]
+                      }}
+                      options={{
+                        responsive: true,
+                        plugins: {
+                          legend: {
+                            position: 'top',
+                          },
+                          title: {
+                            display: true,
+                            text: 'Inventory Usage by Item'
+                          }
+                        },
+                        scales: {
+                          y: {
+                            beginAtZero: true,
+                            title: {
+                              display: true,
+                              text: 'Units Used'
+                            }
+                          },
+                          x: {
+                            title: {
+                              display: true,
+                              text: 'Ingredients'
+                            }
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+                  
+                  {/* Add a tabular view as well */}
+                  <div className="usage-table">
+                    <h4>Detailed Usage Report</h4>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Ingredient</th>
+                          <th>Units Used</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Object.entries(inventoryUsage).map(([ingredient, amount]) => (
+                          <tr key={ingredient}>
+                            <td>{ingredient}</td>
+                            <td>{amount}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
 
