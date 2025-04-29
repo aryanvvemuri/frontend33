@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Manager.css';
+import { drinkRecipes } from '../utils/recipes';
 
 function Manager() {
   // ======= STATE VARIABLES =======
@@ -9,6 +10,11 @@ function Manager() {
   const [orders, setOrders] = useState([]);
   const [totalSales, setTotalSales] = useState(0);
   const [hourlySales, setHourlySales] = useState([]);
+  const [dateRange, setDateRange] = useState({
+    start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    end: new Date().toISOString().split('T')[0]
+  });
+  const [inventoryUsage, setInventoryUsage] = useState({});
 
   const [employees, setEmployees] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -37,6 +43,19 @@ function Manager() {
       .sort((a, b) => a.hour - b.hour);
   };
 
+  const calculateInventoryUsage = (orders) => {
+    const usage = {};
+    orders.forEach(order => {
+      const recipe = drinkRecipes[order.item];
+      if (recipe) {
+        Object.entries(recipe).forEach(([ingredient, amount]) => {
+          usage[ingredient] = (usage[ingredient] || 0) + amount;
+        });
+      }
+    });
+    return usage;
+  };
+
   // ======= DATA FETCHING =======
   useEffect(() => {
     fetchOrders();
@@ -49,11 +68,17 @@ function Manager() {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get('https://leboba.onrender.com/api/orders/getOrder');
+      const res = await axios.get('https://leboba.onrender.com/api/orders/getOrder', {
+        params: {
+          startDate: dateRange.start,
+          endDate: dateRange.end
+        }
+      });
       setOrders(res.data.orders);
       const total = res.data.orders.reduce((sum, order) => sum + Number(order.totalprice), 0);
       setTotalSales(total);
       setHourlySales(processHourlySales(res.data.orders));
+      setInventoryUsage(calculateInventoryUsage(res.data.orders));
     } catch (err) {
       console.error('Failed to load orders:', err);
     }
@@ -281,6 +306,36 @@ function Manager() {
             {activeModal === 'sales' && (
               <div className="modal-body">
                 <h2>Sales Reports</h2>
+                
+                {/* Add date range picker */}
+                <div className="date-range-picker">
+                  <input
+                    type="date"
+                    value={dateRange.start}
+                    onChange={(e) => setDateRange(prev => ({...prev, start: e.target.value}))}
+                  />
+                  <span>to</span>
+                  <input
+                    type="date"
+                    value={dateRange.end}
+                    onChange={(e) => setDateRange(prev => ({...prev, end: e.target.value}))}
+                  />
+                  <button onClick={fetchOrders}>Update Report</button>
+                </div>
+
+                {/* Add inventory usage section */}
+                <div className="inventory-usage">
+                  <h3>Inventory Usage</h3>
+                  <div className="usage-grid">
+                    {Object.entries(inventoryUsage).map(([ingredient, amount]) => (
+                      <div key={ingredient} className="usage-item">
+                        <h4>{ingredient}</h4>
+                        <p>{amount} units used</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="sales-summary">
                   <h3>Last 24 Hours</h3>
                   <p>Total Sales: ${totalSales.toFixed(2)}</p>
