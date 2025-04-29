@@ -68,13 +68,29 @@ function Manager() {
   const calculateInventoryUsage = (orders) => {
     const usage = {};
     orders.forEach(order => {
-      const recipe = drinkRecipes[order.item];
-      if (recipe) {
-        Object.entries(recipe).forEach(([ingredient, amount]) => {
-          usage[ingredient] = (usage[ingredient] || 0) + amount;
-        });
+      // Parse the order details from JSON string if it exists
+      let orderItems = [];
+      try {
+        if (order.orderdetails) {
+          orderItems = JSON.parse(order.orderdetails);
+        }
+      } catch (e) {
+        console.error('Error parsing order details:', e);
+        return;
       }
+
+      // Process each item in the order
+      orderItems.forEach(item => {
+        const recipe = drinkRecipes[item.name];
+        if (recipe) {
+          Object.entries(recipe).forEach(([ingredient, amount]) => {
+            usage[ingredient] = (usage[ingredient] || 0) + amount;
+          });
+        }
+      });
     });
+
+    // Convert to format needed for chart
     return usage;
   };
 
@@ -305,6 +321,13 @@ function Manager() {
     emp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     emp.idemployee.toString().includes(searchQuery)
   );
+
+  useEffect(() => {
+    if (activeModal === 'sales') {
+      console.log('Current orders:', orders);
+      console.log('Calculated usage:', inventoryUsage);
+    }
+  }, [orders, inventoryUsage, activeModal]);
 
   return (
     <div className="manager-page">
