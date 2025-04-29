@@ -111,7 +111,7 @@ function NavBar({ userName, setUserName, userEmail, setUserEmail }) {
           <span>Error loading weather</span>
         ) : weather ? (
           <span>
-            🌡 {Math.round(weather.main?.temp)}°F°F |{' '}
+            🌡 {Math.round(weather.main?.temp)}°F |{' '}
             {capitalizeWords(weather.weather?.[0]?.description)}
           </span>
         ) : (
