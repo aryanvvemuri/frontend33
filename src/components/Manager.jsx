@@ -136,7 +136,7 @@ import React, { useState, useEffect } from 'react';
  
    const fetchOrders = async () => {
      try {
-       const res = await axios.get('http://localhost:3000/api/orders/getOrder');
+       const res = await axios.get('https://leboba.onrender.com/api/orders/getOrder');
  
        // Filter orders based on date range
        const filteredOrders = res.data.orders.filter(order => {
@@ -164,7 +164,7 @@ import React, { useState, useEffect } from 'react';
  
    const fetchEmployees = async () => {
      try {
-       const res = await axios.get('http://localhost:3000/api/employees');
+       const res = await axios.get('https://leboba.onrender.com/api/employees');
        setEmployees(res.data);
      } catch (err) {
        console.error('Failed to load employees:', err);
@@ -173,7 +173,7 @@ import React, { useState, useEffect } from 'react';
  
    const fetchInventory = async () => {
      try {
-       const res = await axios.get('http://localhost:3000/api/inventory');
+       const res = await axios.get('https://leboba.onrender.com/api/inventory');
        setAllInventory(res.data);
      } catch (err) {
        console.error('Failed to load inventory:', err);
@@ -182,7 +182,7 @@ import React, { useState, useEffect } from 'react';
  
    const fetchIngredients = async () => {
      try {
-       const res = await axios.get('http://localhost:3000/api/ingredients');
+       const res = await axios.get('https://leboba.onrender.com/api/ingredients');
        setAllIngredients(res.data);
      } catch (err) {
        console.error('Failed to load ingredients:', err);
@@ -191,7 +191,7 @@ import React, { useState, useEffect } from 'react';
  
    const fetchMenuItems = async () => {
      try {
-       const res = await axios.get('http://localhost:3000/api/menu/items');
+       const res = await axios.get('https://leboba.onrender.com/api/menu/items');
        setMenuItems(res.data);
      } catch (err) {
        console.error('Failed to load menu items:', err);
@@ -212,7 +212,7 @@ import React, { useState, useEffect } from 'react';
    const handleAddEmployee = async (e) => {
      e.preventDefault();
      try {
-       await axios.post('http://localhost:3000/api/employees', {
+       await axios.post('https://leboba.onrender.com/api/employees', {
          name: newEmployee.name,
          title: newEmployee.role
        });
@@ -228,7 +228,7 @@ import React, { useState, useEffect } from 'react';
    const handleDeleteEmployee = async (id) => {
      if (!window.confirm('Are you sure you want to delete this employee?')) return;
      try {
-       await axios.delete(`http://localhost:3000/api/employees/${id}`);
+       await axios.delete(`https://leboba.onrender.com/api/employees/${id}`);
        fetchEmployees();
        alert('Employee deleted successfully!');
      } catch (err) {
@@ -241,13 +241,13 @@ import React, { useState, useEffect } from 'react';
      e.preventDefault();
      try {
        if (newIngredient.type === 'inventory') {
-         await axios.post('http://localhost:3000/api/inventory', {
+         await axios.post('https://leboba.onrender.com/api/inventory', {
            item: newIngredient.item,
            quantity: newIngredient.quantity
          });
          fetchInventory();
        } else if (newIngredient.type === 'ingredient') {
-         await axios.post('http://localhost:3000/api/ingredients', {
+         await axios.post('https://leboba.onrender.com/api/ingredients', {
            item: newIngredient.item,
            quantity: newIngredient.quantity
          });
@@ -269,7 +269,7 @@ import React, { useState, useEffect } from 'react';
      const amount = Number(e.target.amount.value);
      if (isNaN(amount)) return alert('Invalid amount');
      try {
-       await axios.patch(`http://localhost:3000/api/inventory/${id}/add`, { amount });
+       await axios.patch(`https://leboba.onrender.com/api/inventory/${id}/add`, { amount });
        fetchInventory();
        alert('Inventory quantity updated!');
      } catch (error) {
@@ -283,7 +283,7 @@ import React, { useState, useEffect } from 'react';
      const amount = Number(e.target.amount.value);
      if (isNaN(amount)) return alert('Invalid amount');
      try {
-       await axios.patch(`http://localhost:3000/api/ingredients/${id}/add`, { amount });
+       await axios.patch(`https://leboba.onrender.com/api/ingredients/${id}/add`, { amount });
        fetchIngredients();
        alert('Ingredient quantity updated!');
      } catch (err) {
@@ -295,7 +295,7 @@ import React, { useState, useEffect } from 'react';
    const handleDeleteInventoryItem = async (id) => {
      if (!window.confirm('Are you sure you want to delete this inventory item?')) return;
      try {
-       await axios.delete(`http://localhost:3000/api/inventory/${id}`);
+       await axios.delete(`https://leboba.onrender.com/api/inventory/${id}`);
        fetchInventory();
        alert('Inventory item deleted!');
      } catch (error) {
@@ -307,7 +307,7 @@ import React, { useState, useEffect } from 'react';
    const handleDeleteIngredientItem = async (id) => {
      if (!window.confirm('Are you sure you want to delete this ingredient?')) return;
      try {
-       await axios.delete(`http://localhost:3000/api/ingredients/${id}`);
+       await axios.delete(`https://leboba.onrender.com/api/ingredients/${id}`);
        fetchIngredients();
        alert('Ingredient deleted!');
      } catch (error) {
@@ -323,14 +323,14 @@ import React, { useState, useEffect } from 'react';
  
        if (existingItem) {
          // If item exists, update both item name and price
-         await axios.put(`http://localhost:3000/api/menu/${existingItem.idmenu}`, {
+         await axios.put(`https://leboba.onrender.com/api/menu/${existingItem.idmenu}`, {
            item: existingItem.item, // must send the item name too!
            price: parseFloat(newMenuItem.price)
          });
          alert('Menu item price updated successfully!');
        } else {
          // If item doesn't exist, add new one
-         await axios.post('http://localhost:3000/api/menu/add', {
+         await axios.post('https://leboba.onrender.com/api/menu/add', {
            item: newMenuItem.item,
            price: parseFloat(newMenuItem.price)
          });
@@ -348,7 +348,7 @@ import React, { useState, useEffect } from 'react';
    const handleDeleteMenuItem = async (id) => {
      if (!window.confirm('Are you sure you want to delete this menu item?')) return;
      try {
-       await axios.delete(`http://localhost:3000/api/menu/items/${id}`);
+       await axios.delete(`https://leboba.onrender.com/api/menu/items/${id}`);
        fetchMenuItems();
        alert('Menu item deleted successfully!');
      } catch (err) {
@@ -376,7 +376,7 @@ import React, { useState, useEffect } from 'react';
   useEffect(() => {
     const fetchZReportOrders = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/orders/getOrder');
+        const res = await axios.get('https://leboba.onrender.com/api/orders/getOrder');
         const newOrders = res.data.orders;
         const savedTimeString = localStorage.getItem('lastZReportTime');
         const savedTime = savedTimeString ? new Date(savedTimeString) : new Date(0);
