@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from './CartContext';
+import { useAllergens } from '../context/AllergenContext';
+import { allergenData, commonAllergens } from '../utils/allergens';
 import './MenuPage.css';
 import bobaImage from '../assets/boba.png'; // Add this import at the top
 
@@ -9,6 +11,7 @@ function MenuPage() {
   const [menuItems, setMenuItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const { addToCart } = useCart();
+  const { userAllergens, setUserAllergens } = useAllergens();
   const navigate = useNavigate();
 
   // Update the default image URL to use local boba.png
@@ -66,6 +69,25 @@ function MenuPage() {
     addToCart(defaultItem);
     alert(`Added ${item.item} to cart!`);
   };
+
+  // Add allergen check function
+  const checkAllergens = (itemName) => {
+    const itemAllergens = allergenData[itemName] || [];
+    const allergicTo = itemAllergens.filter(allergen => userAllergens.includes(allergen));
+    return allergicTo;
+  };
+
+  // Add allergen warning component
+  const AllergenWarning = ({ allergens }) => {
+    if (allergens.length === 0) return null;
+    
+    return (
+      <div className="allergen-warning">
+        ⚠️ Contains: {allergens.join(', ')}
+      </div>
+    );
+  };
+
   const emojiMap = {
     'Classic Milk Tea': '🧋',
     'Coconut Milk Tea': '🥥🧋',
@@ -85,6 +107,29 @@ function MenuPage() {
     <div className="menu-page">
       <h2 className="menu-title">🍹 Select Your Menu Item</h2>
 
+      {/* Add allergen selection */}
+      <div className="allergen-selector">
+        <h3>Select Your Allergens:</h3>
+        <div className="allergen-options">
+          {commonAllergens.map(allergen => (
+            <label key={allergen} className="allergen-checkbox">
+              <input
+                type="checkbox"
+                checked={userAllergens.includes(allergen)}
+                onChange={(e) => {
+                  const { checked } = e.target;
+                  const newAllergens = checked
+                    ? [...userAllergens, allergen]
+                    : userAllergens.filter(a => a !== allergen);
+                  setUserAllergens(newAllergens);
+                }}
+              />
+              {allergen}
+            </label>
+          ))}
+        </div>
+      </div>
+
       {/* Category selection bar */}
       <div className="category-bar">
         <button onClick={() => handleCategoryClick('All')}>All</button>
@@ -95,33 +140,38 @@ function MenuPage() {
 
       {/* Menu items grid */}
       <div className="menu-grid">
-        {filteredItems.map(item => (
-          <div className="menu-card" key={item.idmenu}>
-            <div className="emoji-icon">
-              {emojiMap[item.item] || '🧋'}
+        {filteredItems.map(item => {
+          const allergicTo = checkAllergens(item.item);
+          return (
+            <div 
+              className={`menu-card ${allergicTo.length > 0 ? 'has-allergens' : ''}`} 
+              key={item.idmenu}
+            >
+              <div className="emoji-icon">
+                {emojiMap[item.item] || '🧋'}
               </div>
-
-            <h4>{item.item}</h4>
-            <p>${Number(item.price).toFixed(2)}</p>
-            <div className="menu-buttons">
-              {/* Only show the "Customize" button if the item is not in the "Food" category */}
-              {categorizeItem(item.item) !== 'Food' && (
-                <button onClick={() => navigate(`/customize/${item.idmenu}`)}>Customize</button>
-              )}
-              <button onClick={() => handleQuickAdd(item)}>Add to Cart</button>
+              <h4>{item.item}</h4>
+              <AllergenWarning allergens={allergicTo} />
+              <p>${Number(item.price).toFixed(2)}</p>
+              <div className="menu-buttons">
+                {/* Only show the "Customize" button if the item is not in the "Food" category */}
+                {categorizeItem(item.item) !== 'Food' && (
+                  <button onClick={() => navigate(`/customize/${item.idmenu}`)}>Customize</button>
+                )}
+                <button onClick={() => handleQuickAdd(item)}>Add to Cart</button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div> {/* closes .menu-page */}
 
-<div style={{ marginTop: '4rem', paddingLeft: '1rem' }}>
-  <button className="back-btn" onClick={() => navigate('/')}>
-    ← Back
-  </button>
-</div>
-</div> 
-);
+      <div style={{ marginTop: '4rem', paddingLeft: '1rem' }}>
+        <button className="back-btn" onClick={() => navigate('/')}>
+          ← Back
+        </button>
+      </div>
+    </div> 
+  );
 }
-
 
 export default MenuPage;

@@ -12,6 +12,7 @@ import EmployeeCartPage from './components/employees/EmployeeCartPage';
 import EmployeeNavBar from './components/employees/EmployeeNavBar';
 import EmployeeLandingPage from './components/employees/EmployeeLandingPage';
 import EmployeeCustomizePage from './components/employees/EmployeeCustomizePage';
+import { AllergenProvider } from './context/AllergenContext';
 
 function App() {
   const [userName, setUserName] = useState(null);
@@ -51,7 +52,7 @@ function App() {
   }, [userEmail]);
 
   return (
-    <>
+    <AllergenProvider>
       {/* ✅ Only show NavBar if not on employee pages */}
       {!isEmployeePage && (
         <>
@@ -89,7 +90,7 @@ function App() {
         <Route path="/employee/cart" element={<EmployeeCartPage />} />
         <Route path="/employee/customize/:id" element={<EmployeeCustomizePage />} />
       </Routes>
-    </>
+    </AllergenProvider>
   );
 }
 
