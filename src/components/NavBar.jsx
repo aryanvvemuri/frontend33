@@ -28,6 +28,25 @@ function NavBar({ userName, setUserName, userEmail, setUserEmail }) {
     navigate('/');
   };
 
+  const fetchWeather = async () => {
+    try {
+      const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=Bryan&units=imperial&appid=${apiKey}`
+      );
+      if (!response.ok) {
+        throw new Error('Failed to fetch weather data');
+      }
+  
+      const data = await response.json();
+      setWeather(data);
+      setWeatherError(false); // Reset error state if successful
+    } catch (error) {
+      console.error('Error fetching weather data:', error);
+      setWeatherError(true); // Set error state
+    }
+  };
+
   useEffect(() => {
     const addGoogleTranslateScript = () => {
       if (document.querySelector('script[src*="translate.google.com"]')) {
@@ -48,6 +67,8 @@ function NavBar({ userName, setUserName, userEmail, setUserEmail }) {
     };
 
     addGoogleTranslateScript();
+
+    fetchWeather();
   }, []);
 
   const isManager = userEmail && approvedManagers.includes(userEmail.toLowerCase());
@@ -85,7 +106,7 @@ function NavBar({ userName, setUserName, userEmail, setUserEmail }) {
           <span>Error loading weather</span>
         ) : weather ? (
           <span>
-            🌡 {Math.round(9 / 5 * (weather.main?.temp) + 32)}°F |{' '}
+            🌡 {Math.round(weather.main?.temp)}°F°F |{' '}
             {weather.weather?.[0]?.description}
           </span>
         ) : (
