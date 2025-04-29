@@ -15,6 +15,11 @@ function NavBar({ userName, setUserName, userEmail, setUserEmail }) {
     return null;
   }
 
+  //To be used with Weather Description
+  const capitalizeWords = (str) =>
+    str.replace(/\b\w/g, (char) => char.toUpperCase());
+  
+
   const approvedManagers = [
     'tylerr13@tamu.edu',
     'ranchhodshiv@tamu.edu',
@@ -107,7 +112,7 @@ function NavBar({ userName, setUserName, userEmail, setUserEmail }) {
         ) : weather ? (
           <span>
             🌡 {Math.round(weather.main?.temp)}°F°F |{' '}
-            {weather.weather?.[0]?.description}
+            {capitalizeWords(weather.weather?.[0]?.description)}
           </span>
         ) : (
           <span>Loading weather...</span>
