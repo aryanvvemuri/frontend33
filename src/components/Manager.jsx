@@ -334,8 +334,7 @@ function Manager() {
       alert('Failed to add or update menu item');
     }
   };
-
-
+  
   const handleDeleteMenuItem = async (id) => {
     if (!window.confirm('Are you sure you want to delete this menu item?')) return;
     try {
