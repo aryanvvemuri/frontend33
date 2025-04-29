@@ -38,9 +38,9 @@ const GoogleLoginComponent = ({ setUserName, setUserEmail }) => {
           onSuccess={handleLoginSuccess}
           onError={() => console.error('Login Failed')}
         />
-         {/* Temporary Button to go directly to Employee page */}
+         {}
       <button onClick={() => navigate('/employee')} style={{ marginTop: '20px' }}>
-        Enter Employee Page (Dev Mode)
+        Enter Employee Page
       </button>
       </div>
     </GoogleOAuthProvider>

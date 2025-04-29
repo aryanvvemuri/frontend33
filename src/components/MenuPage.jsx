@@ -83,7 +83,7 @@ function MenuPage() {
   
   return (
     <div className="menu-page">
-      <h2>🍹 Select Your Menu Item</h2>
+      <h2 className="menu-title">🍹 Select Your Menu Item</h2>
 
       {/* Category selection bar */}
       <div className="category-bar">
@@ -112,10 +112,16 @@ function MenuPage() {
             </div>
           </div>
         ))}
-      </div>
-      <button className="back-btn" onClick={() => navigate('/')}> Back</button>
-    </div>
-  );
+      </div> {/* closes .menu-page */}
+
+<div style={{ marginTop: '4rem', paddingLeft: '1rem' }}>
+  <button className="back-btn" onClick={() => navigate('/')}>
+    ← Back
+  </button>
+</div>
+</div> 
+);
 }
+
 
 export default MenuPage;

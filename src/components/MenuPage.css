@@ -6,13 +6,15 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
-/* Main page title */
 .menu-title {
   font-size: 2.5rem;
-  color: #ffa94d; /* Brighter orange for visibility */
+  color: white;
   text-align: center;
   margin-bottom: 1rem;
+  text-shadow: 1px 1px 2px black;
 }
+
+
 
 /* Category selection bar */
 .category-bar {
@@ -97,6 +99,22 @@
   font-size: 60px;
   margin-bottom: 10px;
   text-align: center;
+}
+
+.back-btn {
+  background-color: #ff9f43;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+.back-btn:hover {
+  background-color: #ff8800;
 }
 
 /* Customize and Add to Cart buttons */

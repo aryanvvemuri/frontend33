@@ -3,6 +3,10 @@
     margin-top: 100px;
   }
   
+  .landing-page h1 {
+    color: white;
+  }
+
   .landing-buttons {
     margin-top: 20px;
   }
@@ -20,3 +24,64 @@
   .landing-buttons button:hover {
     background-color: #ff8800;
   }
+  .boba-cup {
+    position: relative;
+    width: 160px;
+    height: 260px;
+    margin: 50px auto 0;
+    background: linear-gradient(to bottom, #fff3e0, #ffd199);
+    clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
+    border: 4px solid #ffa94d;
+    border-radius: 0 0 30px 30px;
+    overflow: hidden;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+  }
+  
+  
+.boba-rim {
+  position: absolute;
+  top: -10px;
+  left: -8px;
+  width: 176px;
+  height: 20px;
+  background-color: #ffa94d;
+  border-radius: 10px;
+  z-index: 2;
+}
+
+  
+  .boba-pearls-container {
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+    height: 90%;
+    overflow: hidden;
+  }
+  
+  .boba-pearl {
+    position: absolute;
+    bottom: 0;
+    width: 10px;
+    height: 10px;
+    background-color: #4e2c27;
+    border-radius: 50%;
+    opacity: 0.7;
+    animation: floatUp 6s infinite ease-in-out;
+  }
+  
+  @keyframes floatUp {
+    0% {
+      transform: translateY(0) scale(1);
+      opacity: 0.7;
+    }
+    50% {
+      opacity: 0.4;
+    }
+    100% {
+      transform: translateY(-220px) scale(1.1);
+      opacity: 0;
+    }
+  }
+  
+  
