@@ -6,10 +6,13 @@
     font-family: 'Segoe UI', sans-serif;
   }
   
-  h2 {
+  h2.customize-heading {
     font-size: 2rem;
     margin-bottom: 1rem;
+    color: white !important;
+    font-weight: bold;
   }
+  
   
   .custom-section {
     margin-bottom: 1.5rem;
@@ -48,5 +51,40 @@
     text-align: center;
     font-size: 16px;
     font-weight: bold;
-  }  
+  }  .high-contrast {
+    background-color: #000 !important;
+    color: #ffff33 !important; /* Neon yellow */
+  }
+  
+  .high-contrast h2,
+  .high-contrast h2.customize-heading,
+  .high-contrast label,
+  .high-contrast p,
+  .high-contrast .confirmation-message,
+  .high-contrast select,
+  .high-contrast input,
+  .high-contrast span {
+    color: #ffff33 !important;
+  }
+  
+  .high-contrast select,
+  .high-contrast input[type="checkbox"] {
+    background-color: #000;
+    border: 2px solid #ffff33;
+    color: #ffff33;
+  }
+  
+  .high-contrast .add-cart-btn,
+  .high-contrast .accessibility-controls button {
+    background-color: #000;
+    color: #ffff33;
+    border: 2px solid #ffff33;
+  }
+  
+  .high-contrast .add-cart-btn:hover,
+  .high-contrast .accessibility-controls button:hover {
+    background-color: #ffff33;
+    color: #000;
+  }
+  
   

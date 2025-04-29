@@ -17,6 +17,9 @@ const CustomizePage = () => {
   const [ice, setIce] = useState({ idmenu: 35, item: "Normal Ice" });
   const [toppings, setToppings] = useState([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [fontSize, setFontSize] = useState(16);
+  const [highContrast, setHighContrast] = useState(false);
+
 
 
   // Fetch menu items and the specific item to customize when the page loads
@@ -86,8 +89,21 @@ const CustomizePage = () => {
   if (!item) return <div>Loading...</div>;
 
   return (
-    <div className="customize-page">
-      <h2>🛠 Customize {item.item}</h2>
+    <div
+    className={`customize-page ${highContrast ? 'high-contrast' : ''}`}
+    style={{ fontSize: `${fontSize}px` }}
+  >
+
+<h2 className="customize-heading">🛠 Customize {item.item}</h2>
+
+      <div className="accessibility-controls">
+  <button onClick={() => setFontSize(prev => Math.min(prev + 2, 24))}>A+</button>
+  <button onClick={() => setFontSize(prev => Math.max(prev - 2, 12))}>A−</button>
+  <button onClick={() => setHighContrast(prev => !prev)}>
+    {highContrast ? "Normal Mode" : "High Contrast"}
+  </button>
+</div>
+
       <p>${Number(item.price).toFixed(2)}</p>
 
       {/* Sweetness selection */}

@@ -13,6 +13,9 @@ function MenuPage() {
   const { addToCart } = useCart();
   const { userAllergens, setUserAllergens } = useAllergens();
   const navigate = useNavigate();
+  const [fontSize, setFontSize] = useState(16);
+  const [highContrast, setHighContrast] = useState(false);
+
 
   // Update the default image URL to use local boba.png
   const defaultImageUrl = bobaImage;
@@ -104,8 +107,19 @@ function MenuPage() {
   };
   
   return (
-    <div className="menu-page">
+    <div
+    className={`menu-page ${highContrast ? 'high-contrast' : ''}`}
+    style={{ fontSize: `${fontSize}px` }}>
+
+
       <h2 className="menu-title">🍹 Select Your Menu Item</h2>
+      <div className="accessibility-controls">
+     <button onClick={() => setFontSize(prev => Math.min(prev + 2, 24))}>A+</button>
+    <button onClick={() => setFontSize(prev => Math.max(prev - 2, 12))}>A−</button>
+    <button onClick={() => setHighContrast(prev => !prev)}>
+    {highContrast ? "Normal Mode" : "High Contrast"}
+        </button>
+    </div>
 
       {/* Add allergen selection */}
       <div className="allergen-selector">

@@ -1,13 +1,17 @@
 import { useCart } from './CartContext';
 import './CartPage.css';
 import axios from 'axios';
+import React, { useState } from 'react';
 
 const CartPage = () => {
   const { cartItems, removeFromCart, clearCart } = useCart();
 
+  const [fontSize, setFontSize] = useState(16);
+  const [highContrast, setHighContrast] = useState(false);
+
   // Compute total price
   const total = cartItems.reduce((sum, item) => sum + Number(item.price || 0), 0);
-
+  
   const handlePlaceOrder = async () => {
     try {
       // Build one big array of all idmenu values (base + sweetness + ice + toppings)
@@ -51,7 +55,17 @@ const CartPage = () => {
   };
 
   return (
-    <div className="cart-page">
+    <div
+  className={`cart-page ${highContrast ? 'high-contrast' : ''}`}
+  style={{ fontSize: `${fontSize}px` }}
+>
+<div className="accessibility-controls">
+  <button onClick={() => setFontSize(prev => Math.min(prev + 2, 24))}>A+</button>
+  <button onClick={() => setFontSize(prev => Math.max(prev - 2, 12))}>A−</button>
+  <button onClick={() => setHighContrast(prev => !prev)}>
+    {highContrast ? "Normal Mode" : "High Contrast"}
+  </button>
+</div>
       <h2 className="cart-title">🛒 Your Cart</h2>
       {cartItems.length === 0 ? (
         <p>Your cart is empty.</p>

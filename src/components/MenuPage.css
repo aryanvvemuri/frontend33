@@ -169,3 +169,60 @@
 .has-allergens {
   border: 2px solid #ffebee;
 }
+
+
+
+.accessibility-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+  padding: 0 1rem;
+}
+
+.accessibility-controls button {
+  padding: 5px 10px;
+  font-size: 14px;
+  background-color: #ffa94d;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.high-contrast {
+  background-color: #000 !important;
+  color: #ffff33 !important; /* Neon yellow */
+}
+
+.high-contrast .menu-title,
+.high-contrast .menu-card,
+.high-contrast .emoji-icon,
+.high-contrast h4,
+.high-contrast p,
+.high-contrast label,
+.high-contrast .back-btn,
+.high-contrast .category-bar button,
+.high-contrast .menu-buttons button,
+.high-contrast .allergen-warning {
+  color: #ffff33 !important;
+}
+
+.high-contrast .menu-card {
+  background-color: #111 !important;
+  border: 2px solid #ffff33;
+}
+
+.high-contrast .menu-buttons button,
+.high-contrast .category-bar button,
+.high-contrast .back-btn,
+.high-contrast .contrast-toggle {
+  background-color: #000;
+  color: #ffff33;
+  border: 2px solid #ffff33;
+}
+
+.high-contrast .menu-buttons button:hover,
+.high-contrast .category-bar button:hover,
+.high-contrast .back-btn:hover {
+  background-color: #ffff33;
+  color: #000;
+}
