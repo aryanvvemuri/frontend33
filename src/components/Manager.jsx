@@ -309,18 +309,32 @@ function Manager() {
   const handleAddMenuItem = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('https://leboba.onrender.com/api/menu/add', {
-        item: newMenuItem.item,
-        price: parseFloat(newMenuItem.price)
-      });
+      const existingItem = menuItems.find(item => item.item.toLowerCase() === newMenuItem.item.toLowerCase());
+  
+      if (existingItem) {
+        // If item exists, update both item name and price
+        await axios.put(`https://leboba.onrender.com/api/menu/${existingItem.idmenu}`, {
+          item: existingItem.item, // must send the item name too!
+          price: parseFloat(newMenuItem.price)
+        });
+        alert('Menu item price updated successfully!');
+      } else {
+        // If item doesn't exist, add new one
+        await axios.post('https://leboba.onrender.com/api/menu/add', {
+          item: newMenuItem.item,
+          price: parseFloat(newMenuItem.price)
+        });
+        alert('New menu item added successfully!');
+      }
+  
       setNewMenuItem({ item: '', price: '' });
       fetchMenuItems();
-      alert('Menu item added successfully!');
     } catch (err) {
-      console.error('Error adding menu item:', err);
-      alert('Failed to add menu item');
+      console.error('Error adding/updating menu item:', err);
+      alert('Failed to add or update menu item');
     }
   };
+
 
   const handleDeleteMenuItem = async (id) => {
     if (!window.confirm('Are you sure you want to delete this menu item?')) return;
