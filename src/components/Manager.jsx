@@ -482,7 +482,7 @@ function Manager() {
                   <p>Number of Orders: {orders.length}</p>
                 </div>
                 <div className="hourly-sales">
-                  <h3>Sales by Hour</h3>
+                  <h3>Sales by Hour(X-report)</h3>
                   <div className="hourly-sales-grid">
                     {hourlySales.map(({ hour, total, count }) => (
                       <div key={hour} className="hourly-item">
