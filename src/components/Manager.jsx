@@ -90,17 +90,24 @@ function Manager() {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get('https://leboba.onrender.com/api/orders/getOrder', {
-        params: {
-          startDate: dateRange.start,
-          endDate: dateRange.end
-        }
+      const res = await axios.get('https://leboba.onrender.com/api/orders/getOrder');
+      
+      // Filter orders based on date range
+      const filteredOrders = res.data.orders.filter(order => {
+        const orderDate = new Date(order.created_at);
+        const startDate = new Date(dateRange.start);
+        const endDate = new Date(dateRange.end);
+        // Set end date to end of day
+        endDate.setHours(23, 59, 59, 999);
+        
+        return orderDate >= startDate && orderDate <= endDate;
       });
-      setOrders(res.data.orders);
-      const total = res.data.orders.reduce((sum, order) => sum + Number(order.totalprice), 0);
+
+      setOrders(filteredOrders);
+      const total = filteredOrders.reduce((sum, order) => sum + Number(order.totalprice), 0);
       setTotalSales(total);
-      setHourlySales(processHourlySales(res.data.orders));
-      setInventoryUsage(calculateInventoryUsage(res.data.orders));
+      setHourlySales(processHourlySales(filteredOrders));
+      setInventoryUsage(calculateInventoryUsage(filteredOrders));
     } catch (err) {
       console.error('Failed to load orders:', err);
     }
