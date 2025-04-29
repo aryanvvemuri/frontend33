@@ -17,7 +17,6 @@ export const allergenData = {
 
 export const commonAllergens = [
   "milk",
-  "dairy",
   "tree nuts",
   "almonds",
   "coconut",
