@@ -11,7 +11,7 @@ const EmployeeLandingPage = () => {
       <div className="landing-buttons">
         <button onClick={() => navigate('/employee/menu')}>Go to Menu</button>
         <button onClick={() => navigate('/employee/cart')}>View Cart</button>
-        <button onClick={() => navigate('/')}>Back to Home</button>
+        <button onClick={() => navigate('/menu/1')}>Back to Home</button>
       </div>
     </div>
   );
