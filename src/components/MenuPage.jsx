@@ -63,12 +63,15 @@ function MenuPage() {
 
   // Add a menu item to the cart (with default options)
   const handleQuickAdd = (item) => {
+    const isFood = categorizeItem(item.item) === 'Food'; // Check if the item is a food item
+  
     const defaultItem = {
       ...item,
-      sweetness: { idmenu: 38, item: "Normal Sugar" }, // Default sweetness
-      ice: { idmenu: 35, item: "Normal Ice" },         // Default ice
-      toppings: [],                                   // No toppings by default
+      sweetness: isFood ? null : { idmenu: 38, item: "Normal Sugar" }, // Add sweetness only if not food
+      ice: isFood ? null : { idmenu: 35, item: "Normal Ice" },         // Add ice only if not food
+      toppings: [], // No toppings by default
     };
+  
     addToCart(defaultItem);
     alert(`Added ${item.item} to cart!`);
   };

@@ -83,7 +83,10 @@ const CartPage = () => {
               <li key={i}>
                 <strong>{item.item}</strong> — ${Number(item.price)?.toFixed(2)}
                 <br />
-                Sweetness: {item.sweetness?.item || 'N/A'} · Ice: {item.ice?.item || 'N/A'}
+                {/* Only display Sweetness if it exists */}
+                {item.sweetness?.item && <span>Sweetness: {item.sweetness.item}</span>}
+                {/* Only display Ice if it exists */}
+                {item.ice?.item && <span> · Ice: {item.ice.item}</span>}
                 {Array.isArray(item.toppings) && item.toppings.length > 0 && (
                   <div>
                     Toppings: {item.toppings.map(t => t.item).join(', ')}
