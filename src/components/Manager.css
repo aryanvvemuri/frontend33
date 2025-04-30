@@ -296,3 +296,29 @@ h2 {
 .modal-content .inventory-usage * {
   color: #000 !important;
 }
+
+.employee-card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  color: #000; /* Set text color to black */
+}
+
+.employee-card p {
+  margin: 5px 0;
+}
+
+.employee-card .delete-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.employee-card .delete-btn:hover {
+  background-color: #c0392b;
+}

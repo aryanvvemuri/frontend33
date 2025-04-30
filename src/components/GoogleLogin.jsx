@@ -39,8 +39,8 @@ const GoogleLoginComponent = ({ setUserName, setUserEmail }) => {
           onError={() => console.error('Login Failed')}
         />
          {}
-      <button onClick={() => navigate('/employee')} style={{ marginTop: '20px' }}>
-        Enter Employee Page
+      <button onClick={() => navigate('/menu')} style={{ marginTop: '20px' }}>
+        Enter Menu Page
       </button>
       </div>
     </GoogleOAuthProvider>

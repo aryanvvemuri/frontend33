@@ -38,6 +38,7 @@ import React, { useState, useEffect } from 'react';
    });
    const [inventoryUsage, setInventoryUsage] = useState({});
  
+    //Employees
    const [employees, setEmployees] = useState([]);
    const [searchQuery, setSearchQuery] = useState('');
    const [newEmployee, setNewEmployee] = useState({ name: '', role: '' });
@@ -594,25 +595,53 @@ import React, { useState, useEffect } from 'react';
                </div>
              )}
  
-             {activeModal === 'employee' && (
-               <div className="modal-body">
-                 <h2>Employee Management</h2>
-                 <input type="text" placeholder="Search employees..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="inventory-form" />
-                 {filteredEmployees.map(emp => (
-                   <div key={emp.idemployee} className="employee-card">
-                     <p><strong>ID:</strong> {emp.idemployee}</p>
-                     <p><strong>Name:</strong> {emp.name}</p>
-                     <p><strong>Role:</strong> {emp.title}</p>
-                     <button className="delete-btn" onClick={() => handleDeleteEmployee(emp.idemployee)}>Delete</button>
-                   </div>
-                 ))}
-                 <form onSubmit={handleAddEmployee} className="inventory-form">
-                   <input type="text" placeholder="Name" value={newEmployee.name} onChange={(e) => setNewEmployee({ ...newEmployee, name: e.target.value })} required />
-                   <input type="text" placeholder="Role" value={newEmployee.role} onChange={(e) => setNewEmployee({ ...newEmployee, role: e.target.value })} required />
-                   <button type="submit" className="add-btn">Add Employee</button>
-                 </form>
-               </div>
-             )}
+              {activeModal === 'employee' && (
+                <div className="modal-body">
+                  <h2>Employee Management</h2>
+                  <input
+                    type="text"
+                    placeholder="Search employees..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="inventory-form"
+                  />
+                  <div className="employee-list">
+                    {employees
+                      .filter(emp =>
+                        emp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        emp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        emp.idemployee.toString().includes(searchQuery)
+                      )
+                      .map(emp => (
+                        <div key={emp.idemployee} className="employee-card">
+                          <p><strong>ID:</strong> {emp.idemployee}</p>
+                          <p><strong>Name:</strong> {emp.name}</p>
+                          <p><strong>Role:</strong> {emp.title}</p>
+                          <button className="delete-btn" onClick={() => handleDeleteEmployee(emp.idemployee)}>
+                            Delete
+                          </button>
+                        </div>
+                      ))}
+                  </div>
+                  <form onSubmit={handleAddEmployee} className="inventory-form">
+                    <input
+                      type="text"
+                      placeholder="Name"
+                      value={newEmployee.name}
+                      onChange={(e) => setNewEmployee({ ...newEmployee, name: e.target.value })}
+                      required
+                    />
+                    <input
+                      type="text"
+                      placeholder="Role"
+                      value={newEmployee.role}
+                      onChange={(e) => setNewEmployee({ ...newEmployee, role: e.target.value })}
+                      required
+                    />
+                    <button type="submit" className="add-btn">Add Employee</button>
+                  </form>
+                </div>
+              )}
  
              {activeModal === 'menu' && (
                <div className="modal-body">
