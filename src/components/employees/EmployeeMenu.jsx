@@ -48,12 +48,15 @@ function EmployeeMenu() {
   };
 
   const handleQuickAdd = (item) => {
+    const isFood = categorizeItem(item.item) === 'Food'; // Check if the item is a food item
+  
     const defaultItem = {
       ...item,
-      sweetness: { idmenu: 38, item: "Normal Sugar" },
-      ice: { idmenu: 35, item: "Normal Ice" },
-      toppings: [],
+      sweetness: isFood ? null : { idmenu: 38, item: "Normal Sugar" }, // Add sweetness only if not food
+      ice: isFood ? null : { idmenu: 35, item: "Normal Ice" },         // Add ice only if not food
+      toppings: [], // No toppings by default
     };
+  
     addToCart(defaultItem);
     alert(`Added ${item.item} to cart!`);
   };
