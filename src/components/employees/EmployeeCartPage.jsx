@@ -34,10 +34,16 @@ const EmployeeCartPage = () => {
       });
 
       const payload = {
-        userId, // Include the user's ID in the payload
+        employeeId: userId, // Include the user's ID in the payload
         totalPrice: total,
         selectedItems,
       };
+
+      console.log('🧪 ORDER DEBUG', {
+        totalPrice: total,
+        selectedItems,
+        employeeId: userId
+      });
 
       console.log('Sending order payload:', payload);
       await axios.post('https://leboba.onrender.com/api/orders', payload);

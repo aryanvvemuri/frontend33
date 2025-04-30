@@ -40,8 +40,10 @@ const CartPage = () => {
         return ids;
       });
 
+      const employeeIdToUse = userId || 1; // Use the userId from context or default to 1
+
       const payload = {
-        employeeId: userId,
+        employeeId: employeeIdToUse, // Use the userId from context
         totalPrice: total,
         selectedItems,   // e.g. [2, 39, 36, 10, 12]
       };
