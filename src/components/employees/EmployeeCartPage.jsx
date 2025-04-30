@@ -1,9 +1,11 @@
 import { useCart } from '../CartContext';
 import axios from 'axios';
-import EmployeeNavBar from './EmployeeNavBar'; // ✅ make sure this path is correct
+import EmployeeNavBar from './EmployeeNavBar';
+import { useUser } from '../../context/UserContext'; // Import UserContext to access userId
 
 const EmployeeCartPage = () => {
   const { cartItems, removeFromCart, clearCart } = useCart();
+  const { userId } = useUser(); // Access userId from UserContext
 
   const total = cartItems.reduce((sum, item) => sum + Number(item.price || 0), 0);
 
@@ -32,6 +34,7 @@ const EmployeeCartPage = () => {
       });
 
       const payload = {
+        userId, // Include the user's ID in the payload
         totalPrice: total,
         selectedItems,
       };
@@ -49,7 +52,7 @@ const EmployeeCartPage = () => {
 
   return (
     <>
-      <EmployeeNavBar /> {/* ✅ Add navbar here */}
+      <EmployeeNavBar />
 
       <div style={{ padding: '20px' }}>
         <h2>Employee Cart</h2>
