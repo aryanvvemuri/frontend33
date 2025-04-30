@@ -2,12 +2,14 @@ import { useCart } from './CartContext';
 import './CartPage.css';
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useUser } from '../context/UserContext'; // Import the UserContext
 
 const CartPage = () => {
   const { cartItems, removeFromCart, clearCart } = useCart();
 
   const [fontSize, setFontSize] = useState(16);
   const [highContrast, setHighContrast] = useState(false);
+  const { userId } = useUser(); // Access userId from UserContext
 
   // Compute total price
   const total = cartItems.reduce((sum, item) => sum + Number(item.price || 0), 0);
@@ -38,12 +40,17 @@ const CartPage = () => {
         return ids;
       });
 
+      const employeeIdToUse = userId || 1; // Use the userId from context or default to 1
+
       const payload = {
+        employeeId: employeeIdToUse, // Use the userId from context
         totalPrice: total,
         selectedItems,   // e.g. [2, 39, 36, 10, 12]
       };
 
       console.log(' Sending order payload:', payload);
+      console.log(' User ID:', userId); // Log the userId to check if it's being passed correctly
+      console.log(' Selected items:', selectedItems); // Log the selected items
       await axios.post('https://leboba.onrender.com/api/orders', payload);
 
       alert(' Order placed successfully!'); //confirmation so we dont have to check the database

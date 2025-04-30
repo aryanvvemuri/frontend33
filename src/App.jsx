@@ -13,10 +13,11 @@ import EmployeeNavBar from './components/employees/EmployeeNavBar';
 import EmployeeLandingPage from './components/employees/EmployeeLandingPage';
 import EmployeeCustomizePage from './components/employees/EmployeeCustomizePage';
 import { AllergenProvider } from './context/AllergenContext';
+import { useUser } from './context/UserContext';
 
 function App() {
   const [userName, setUserName] = useState(null);
-  const [userEmail, setUserEmail] = useState(null);
+  // const [userEmail, setUserEmail] = useState(null);
   const location = useLocation(); // ✅ add this
   const isEmployeePage = location.pathname.startsWith('/employee'); // ✅
 
@@ -40,16 +41,8 @@ function App() {
     addGoogleTranslateScript();
   }, []);
 
-  const approvedManagers = [
-    'tylerr13@tamu.edu',
-    'ranchhodshiv@tamu.edu',
-    'avv123@tamu.edu',
-    'harsh_jan@tamu.edu',
-  ];
 
-  const isManager = useMemo(() => {
-    return userEmail ? approvedManagers.includes(userEmail.toLowerCase()) : false;
-  }, [userEmail]);
+  const {isManager, userEmail, setUserEmail} = useUser(); // ✅ useUser context to get isManager and userEmail 
 
   return (
     <AllergenProvider>
