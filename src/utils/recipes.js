@@ -1,52 +1,52 @@
 export const drinkRecipes = {
   "Classic Milk Tea": {
-    tea: 30,
-    milk: 120,
-    sugar: 15
+    tea: 1,
+    milk: 1,
+    sugar: 1
   },
   "Coconut Milk Tea": {
-    tea: 30,
-    coconut: 60,
-    milk: 60,
-    sugar: 15
+    tea: 1,
+    coconut: 1,
+    milk: 1,
+    sugar: 1
   },
   "Almond Milk Tea": {
-    tea: 30,
-    "almond milk": 120,
-    sugar: 15
+    tea: 1,
+    "almond milk": 1,
+    sugar: 1
   },
   "Matcha Milk Tea": {
-    matcha: 30,
-    milk: 120,
-    sugar: 15
+    matcha: 1,
+    milk: 1,
+    sugar: 1
   },
   "Mango and Passion Fruit Tea": {
-    tea: 30,
-    mango: 45,
-    "passion fruit": 45,
-    sugar: 15
+    tea: 1,
+    mango: 1,
+    "passion fruit": 1,
+    sugar: 1
   },
   "Mango Green Tea": {
-    tea: 30,
-    mango: 45,
-    sugar: 15
+    tea: 1,
+    mango: 1,
+    sugar: 1
   },
   "Kiwi Fruit Tea": {
-    tea: 30,
-    kiwi: 45,
-    sugar: 15
+    tea: 1,
+    kiwi: 1,
+    sugar: 1
   },
   "Tropical Fruit Tea": {
-    tea: 30,
-    mango: 30,
-    "passion fruit": 30,
-    lychee: 30,
-    sugar: 15
+    tea: 1,
+    mango: 1,
+    "passion fruit": 1,
+    lychee: 1,
+    sugar: 1
   },
   "Seasonal Tigers Blood Lemonade": {
-    "tigers blood": 60,
-    lemon: 30,
-    sugar: 15
+    "tigers blood": 1,
+    lemon: 1,
+    sugar: 1
   },
   "Crispy Puffs": {
     "crispy puff": 1
