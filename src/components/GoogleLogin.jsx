@@ -13,7 +13,7 @@ const GoogleLoginComponent = () => {
 
     try {
       const response = await axios.post('https://leboba.onrender.com/auth/google', { idToken });
-      console.log('Backend response:', response.data);
+
 
       // Update the user's name and ID in the context
       setUserName(response.data.name);
