@@ -78,7 +78,7 @@ const EmployeeCustomizePage = () => {
       <EmployeeNavBar />
 
       <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-        <h2>Customize {item.item}</h2>
+        <h2 style={{ color: 'white' }}>Customize {item.item}</h2>
         <p>Price: ${Number(item.price).toFixed(2)}</p>
 
         {/* Sweetness */}

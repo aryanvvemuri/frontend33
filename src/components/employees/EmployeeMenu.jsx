@@ -66,7 +66,7 @@ function EmployeeMenu() {
       <EmployeeNavBar />
 
       <div style={{ padding: '20px' }}>
-        <h2>Employee Menu</h2>
+        <h2 style={{color: 'white'}}>Employee Menu</h2>
 
         {/* Category buttons */}
         <div style={{ marginBottom: '20px' }}>
