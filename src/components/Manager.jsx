@@ -589,7 +589,7 @@ import React, { useState, useEffect } from 'react';
                        <input type="number" name="amount" placeholder="Amount to add" required className="quantity-input" />
                        <button type="submit" className="add-btn">Add Quantity</button>
                      </form>
-                     <button className="delete-btn" onClick={() => handleDeleteIngredientItem(item.idingredient)}>Delete Item</button>
+                     <button className="delete-btn" onClick={() => handleDeleteIngredientItem(item.idinventory)}>Delete Item</button>
                    </div>
                  ))}
                </div>
