@@ -115,3 +115,19 @@ body, html {
 .cart-page button:hover {
   background-color: #e60000;
 }
+
+/* Covers ALL major layout containers in high contrast mode */
+.high-contrast,
+.high-contrast body,
+.high-contrast html,
+.high-contrast #root,
+.high-contrast .cart-page,
+.high-contrast .page-container,
+.high-contrast .main-wrapper,
+.high-contrast .menu-page,
+.high-contrast .landing-page,
+.high-contrast .customize-page {
+  background-color: black !important;
+  color: yellow !important;
+}
+

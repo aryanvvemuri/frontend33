@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from './CartContext';
 import { useUser } from '../context/UserContext';
+import { useAccessibility } from '../context/AccessibilityContext'; // ✅ Import context
 import './NavBar.css';
 
 function NavBar() {
@@ -11,7 +12,8 @@ function NavBar() {
   const location = useLocation();
   const { cartItems } = useCart();
   const { userName, isManager, isEmployee, setUserName, setIsManager, setIsEmployee } = useUser();
-
+  const { fontSize, highContrast, setFontSize, setHighContrast } = useAccessibility(); // ✅ Use values
+ 
   const capitalizeWords = (str) =>
     str.replace(/\b\w/g, (char) => char.toUpperCase());
 
@@ -39,7 +41,7 @@ function NavBar() {
   };
 
   useEffect(() => {
-    if (location.pathname.startsWith('/employee')) return; // Don't load on /employee
+    if (location.pathname.startsWith('/employee')) return;
 
     if (!document.querySelector('script[src*="translate.google.com"]')) {
       const script = document.createElement('script');
@@ -61,14 +63,11 @@ function NavBar() {
   const hideNavContent = location.pathname.startsWith('/employee');
 
   return (
-    <nav className="nav-bar">
-      {/* Only render Translate when not on /employee */}
-      {!hideNavContent && (
-        <div id="google_translate_element" className="translate-dropdown"></div>
-      )}
-
+    <nav className={`nav-bar ${highContrast ? 'high-contrast' : ''}`}>
       {!hideNavContent && (
         <>
+          <div id="google_translate_element" className="translate-dropdown"></div>
+
           <div className="nav-links">
             {userName && <span className="welcome-name">Welcome, {userName}!</span>}
           </div>
@@ -90,6 +89,15 @@ function NavBar() {
             ) : (
               <Link to="/login">Login</Link>
             )}
+          </div>
+
+          {/* ✅ Accessibility controls */}
+          <div className="accessibility-controls">
+            <button onClick={() => setFontSize(prev => Math.min(prev + 2, 24))}>A+</button>
+            <button onClick={() => setFontSize(prev => Math.max(prev - 2, 12))}>A−</button>
+            <button onClick={() => setHighContrast(prev => !prev)}>
+              {highContrast ? 'Normal Mode' : 'High Contrast'}
+            </button>
           </div>
 
           <div className="weather-info">

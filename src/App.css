@@ -1,25 +1,37 @@
+/* ✅ Universal Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ✅ Root container */
 #root {
   max-width: 100%;
   margin: 0;
-  padding: 2rem;
+  padding: 0; /* Removed padding that caused gray strip */
   text-align: center;
   height: auto;
   display: block;
 }
 
+/* ✅ Logo styling (unchanged) */
 .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+/* ✅ Logo animation */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -35,6 +47,7 @@
   }
 }
 
+/* ✅ Utility sections */
 .card {
   padding: 2em;
 }
@@ -42,13 +55,27 @@
 .read-the-docs {
   color: #888;
 }
+
+/* ✅ Base body setup */
 body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: auto;
-  display: block; /* Remove flexbox centering */
-  align-items: unset; /* Remove vertical centering */
-  justify-content: unset; /* Remove horizontal centering */
+  display: block;
+  align-items: unset;
+  justify-content: unset;
 }
 
+/* ✅ High contrast background handling */
+.app-container.high-contrast,
+.high-contrast,
+.high-contrast body,
+.high-contrast html,
+.high-contrast #root,
+.high-contrast .app-container {
+  background-color: black !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom'; // ✅ add useLocation
+import { Routes, Route, useLocation } from 'react-router-dom';
 import MenuPage from './components/MenuPage';
 import CustomizePage from './components/CustomizePage';
 import CartPage from './components/CartPage';
@@ -14,12 +14,19 @@ import EmployeeLandingPage from './components/employees/EmployeeLandingPage';
 import EmployeeCustomizePage from './components/employees/EmployeeCustomizePage';
 import { AllergenProvider } from './context/AllergenContext';
 import { useUser } from './context/UserContext';
+import { AccessibilityProvider } from './context/AccessibilityContext';
 
 function App() {
   const [userName, setUserName] = useState(null);
-  // const [userEmail, setUserEmail] = useState(null);
-  const location = useLocation(); // ✅ add this
-  const isEmployeePage = location.pathname.startsWith('/employee'); // ✅
+  const location = useLocation();
+  const isEmployeePage = location.pathname.startsWith('/employee');
+
+  const { isManager, userEmail, setUserEmail } = useUser();
+
+  // ✅ Read highContrast from localStorage
+  const { highContrast } = useMemo(() => {
+    return JSON.parse(localStorage.getItem('accessibility')) || { highContrast: false };
+  }, []);
 
   useEffect(() => {
     const addGoogleTranslateScript = () => {
@@ -41,49 +48,51 @@ function App() {
     addGoogleTranslateScript();
   }, []);
 
-
-  const {isManager, userEmail, setUserEmail} = useUser(); // ✅ useUser context to get isManager and userEmail 
-
   return (
-    <AllergenProvider>
-      {/* ✅ Only show NavBar if not on employee pages */}
-      {!isEmployeePage && (
-        <>
-        <NavBar
-          userName={userName}
-          setUserName={setUserName}
-          userEmail={userEmail}
-          setUserEmail={setUserEmail}
-        />
-         {/* ✅ Google Translate dropdown container */}
-         <div
-         id="google_translate_element"
-         style={{ position: 'fixed', top: '10px', left: '10px', zIndex: 1000 }}
-       />
-     </>
-    )}
+    <div className={`app-container ${highContrast ? 'high-contrast' : ''}`}>
+      <AccessibilityProvider>
+        <AllergenProvider>
+          {!isEmployeePage && (
+            <>
+              <NavBar
+                userName={userName}
+                setUserName={setUserName}
+                userEmail={userEmail}
+                setUserEmail={setUserEmail}
+              />
+              <div
+                id="google_translate_element"
+                style={{ position: 'fixed', top: '10px', left: '10px', zIndex: 1000 }}
+              />
+            </>
+          )}
 
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/menu/:categoryId" element={<MenuPage />} />
-        <Route path="/customize/:id" element={<CustomizePage />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route
-          path="/manager"
-          element={isManager ? <Manager /> : <LandingPage />}
-        />
-        <Route
-          path="/login"
-          element={<GoogleLoginComponent setUserName={setUserName} setUserEmail={setUserEmail} />}
-        />
-
-        {/* ✅ Employee routes */}
-        <Route path="/employee" element={<EmployeeLandingPage />} />
-        <Route path="/employee/menu" element={<EmployeeMenu />} />
-        <Route path="/employee/cart" element={<EmployeeCartPage />} />
-        <Route path="/employee/customize/:id" element={<EmployeeCustomizePage />} />
-      </Routes>
-    </AllergenProvider>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/menu/:categoryId" element={<MenuPage />} />
+            <Route path="/customize/:id" element={<CustomizePage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route
+              path="/manager"
+              element={isManager ? <Manager /> : <LandingPage />}
+            />
+            <Route
+              path="/login"
+              element={
+                <GoogleLoginComponent
+                  setUserName={setUserName}
+                  setUserEmail={setUserEmail}
+                />
+              }
+            />
+            <Route path="/employee" element={<EmployeeLandingPage />} />
+            <Route path="/employee/menu" element={<EmployeeMenu />} />
+            <Route path="/employee/cart" element={<EmployeeCartPage />} />
+            <Route path="/employee/customize/:id" element={<EmployeeCustomizePage />} />
+          </Routes>
+        </AllergenProvider>
+      </AccessibilityProvider>
+    </div>
   );
 }
 

@@ -1,5 +1,5 @@
 .menu-page {
-  background-color: #1e1e1e; /* Dark background for kiosk contrast */
+  background-color: #1e1e1e;
   color: #fff;
   padding: 2rem;
   min-height: 100vh;
@@ -14,9 +14,6 @@
   text-shadow: 1px 1px 2px black;
 }
 
-
-
-/* Category selection bar */
 .category-bar {
   display: flex;
   justify-content: center;
@@ -28,7 +25,6 @@
   flex-wrap: wrap;
 }
 
-/* Category buttons */
 .category-bar button {
   background-color: #ff9f43;
   color: white;
@@ -41,19 +37,16 @@
   transition: background-color 0.3s ease;
 }
 
-/* Hover effect for category buttons */
 .category-bar button:hover {
   background-color: #ff8800;
 }
 
-/* Grid layout for menu items */
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 2rem;
 }
 
-/* Individual menu item card */
 .menu-card {
   background-color: #ffe5b4;
   color: #333;
@@ -67,7 +60,6 @@
   align-items: center;
 }
 
-/* Menu item image */
 .menu-item-image {
   width: 150px;
   height: 150px;
@@ -76,19 +68,16 @@
   margin-bottom: 10px;
 }
 
-/* Menu item title */
 .menu-card h4 {
   font-size: 1.6rem;
   margin-bottom: 1rem;
 }
 
-/* Menu item price */
 .menu-card p {
   font-size: 1.3rem;
   margin-bottom: 1.5rem;
 }
 
-/* Buttons under each menu item */
 .menu-buttons {
   display: flex;
   flex-direction: column;
@@ -113,11 +102,11 @@
   transition: background-color 0.3s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
+
 .back-btn:hover {
   background-color: #ff8800;
 }
 
-/* Customize and Add to Cart buttons */
 .menu-buttons button {
   background-color: #ff9f43;
   border: none;
@@ -129,7 +118,6 @@
   transition: background-color 0.3s ease;
 }
 
-/* Hover effect for item action buttons */
 .menu-buttons button:hover {
   background-color: #ff8800;
 }
@@ -166,11 +154,17 @@
   border-radius: 4px;
 }
 
+/* 🟡 High contrast fix for allergen warning */
+.high-contrast .allergen-warning {
+  background-color: black !important;
+  color: yellow !important;
+  border: 2px solid yellow;
+  font-weight: bold;
+}
+
 .has-allergens {
   border: 2px solid #ffebee;
 }
-
-
 
 .accessibility-controls {
   display: flex;
@@ -188,9 +182,10 @@
   border-radius: 5px;
   cursor: pointer;
 }
+
 .high-contrast {
   background-color: #000 !important;
-  color: #ffff33 !important; /* Neon yellow */
+  color: #ffff33 !important;
 }
 
 .high-contrast .menu-title,
@@ -201,8 +196,7 @@
 .high-contrast label,
 .high-contrast .back-btn,
 .high-contrast .category-bar button,
-.high-contrast .menu-buttons button,
-.high-contrast .allergen-warning {
+.high-contrast .menu-buttons button {
   color: #ffff33 !important;
 }
 

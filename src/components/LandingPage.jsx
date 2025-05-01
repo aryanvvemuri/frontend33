@@ -1,12 +1,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LandingPage.css';
+import { useAccessibility } from '../context/AccessibilityContext'; // ✅ Import context
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const { highContrast, fontSize } = useAccessibility(); // ✅ Use accessibility settings
 
   return (
-    <div className="landing-page">
+    <div
+      className={`landing-page ${highContrast ? 'high-contrast' : ''}`} // ✅ Add class
+      style={{ fontSize: `${fontSize}px` }} // ✅ Apply font size
+    >
       {/* Main landing content */}
       <div className="landing-content" style={{ position: 'relative', zIndex: 1 }}>
         <h1>Welcome to LeBoba</h1>

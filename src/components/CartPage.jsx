@@ -1,78 +1,64 @@
 import { useCart } from './CartContext';
 import './CartPage.css';
 import axios from 'axios';
-import React, { useState } from 'react';
-import { useUser } from '../context/UserContext'; // Import the UserContext
+import React from 'react';
+import { useUser } from '../context/UserContext'; // Access userId
+import { useAccessibility } from '../context/AccessibilityContext'; // ✅ Use global accessibility settings
 
 const CartPage = () => {
   const { cartItems, removeFromCart, clearCart } = useCart();
+  const { userId } = useUser();
+  const { fontSize, highContrast } = useAccessibility(); // ✅ Use global font/contrast
 
-  const [fontSize, setFontSize] = useState(16);
-  const [highContrast, setHighContrast] = useState(false);
-  const { userId } = useUser(); // Access userId from UserContext
-
-  // Compute total price
   const total = cartItems.reduce((sum, item) => sum + Number(item.price || 0), 0);
-  
+
   const handlePlaceOrder = async () => {
     try {
-      // Build one big array of all idmenu values (base + sweetness + ice + toppings)
       const selectedItems = cartItems.flatMap(item => {
         const ids = [];
-        // base drink
         if (item.baseId) {
           ids.push(item.baseId);
         } else if (item.idmenu) {
           ids.push(item.idmenu);
         }
-        // sweetness choice
         if (item.sweetness?.idmenu) {
           ids.push(item.sweetness.idmenu);
         }
-        // ice choice
         if (item.ice?.idmenu) {
           ids.push(item.ice.idmenu);
         }
-        // any toppings
         if (Array.isArray(item.toppings)) {
           ids.push(...item.toppings.map(t => t.idmenu));
         }
         return ids;
       });
 
-      const employeeIdToUse = userId || 1; // Use the userId from context or default to 1
+      const employeeIdToUse = userId || 1;
 
       const payload = {
-        employeeId: employeeIdToUse, // Use the userId from context
+        employeeId: employeeIdToUse,
         totalPrice: total,
-        selectedItems,   // e.g. [2, 39, 36, 10, 12]
+        selectedItems,
       };
 
-      console.log(' Sending order payload:', payload);
-      console.log(' User ID:', userId); // Log the userId to check if it's being passed correctly
-      console.log(' Selected items:', selectedItems); // Log the selected items
+      console.log('Sending order payload:', payload);
+      console.log('User ID:', userId);
+      console.log('Selected items:', selectedItems);
       await axios.post('https://leboba.onrender.com/api/orders', payload);
 
-      alert(' Order placed successfully!'); //confirmation so we dont have to check the database
+      alert('Order placed successfully!');
       clearCart();
     } catch (err) {
-      console.error(' Error placing order:', err);
+      console.error('Error placing order:', err);
       alert('There was an issue placing your order.');
     }
   };
 
   return (
     <div
-  className={`cart-page ${highContrast ? 'high-contrast' : ''}`}
-  style={{ fontSize: `${fontSize}px` }}
->
-<div className="accessibility-controls">
-  <button onClick={() => setFontSize(prev => Math.min(prev + 2, 24))}>A+</button>
-  <button onClick={() => setFontSize(prev => Math.max(prev - 2, 12))}>A−</button>
-  <button onClick={() => setHighContrast(prev => !prev)}>
-    {highContrast ? "Normal Mode" : "High Contrast"}
-  </button>
-</div>
+      className={`cart-page ${highContrast ? 'high-contrast' : ''}`}
+      style={{ fontSize: `${fontSize}px` }}
+    >
       <h2 className="cart-title">🛒 Your Cart</h2>
       {cartItems.length === 0 ? (
         <p>Your cart is empty.</p>
@@ -83,9 +69,7 @@ const CartPage = () => {
               <li key={i}>
                 <strong>{item.item}</strong> — ${Number(item.price)?.toFixed(2)}
                 <br />
-                {/* Only display Sweetness if it exists */}
                 {item.sweetness?.item && <span>Sweetness: {item.sweetness.item}</span>}
-                {/* Only display Ice if it exists */}
                 {item.ice?.item && <span> · Ice: {item.ice.item}</span>}
                 {Array.isArray(item.toppings) && item.toppings.length > 0 && (
                   <div>

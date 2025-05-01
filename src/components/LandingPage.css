@@ -1,44 +1,91 @@
 .landing-page {
-    text-align: center;
-    margin-top: 100px;
-  }
-  
-  .landing-page h1 {
-    color: white;
-  }
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  background-color: #1e1e1e;
+}
 
-  .landing-buttons {
-    margin-top: 20px;
-  }
-  
-  .landing-buttons button {
-    padding: 10px 20px;
-    margin: 10px;
-    font-size: 18px;
-    background-color: #ffa94d;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  
-  .landing-buttons button:hover {
-    background-color: #ff8800;
-  }
-  .boba-cup {
-    position: relative;
-    width: 160px;
-    height: 260px;
-    margin: 50px auto 0;
-    background: linear-gradient(to bottom, #fff3e0, #ffd199);
-    clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
-    border: 4px solid #ffa94d;
-    border-radius: 0 0 30px 30px;
-    overflow: hidden;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-    z-index: 1;
-  }
-  
-  
+.high-contrast .landing-page {
+  background-color: black !important;
+}
+
+/* Make full background black in high contrast mode */
+.landing-page.high-contrast {
+  background-color: black !important;
+}
+
+.landing-page h1 {
+  color: white;
+  font-size: 2.5rem;
+}
+
+/* High contrast styles for heading */
+.landing-page.high-contrast h1 {
+  color: yellow !important;
+  font-weight: bold;
+}
+
+.landing-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Also override background for inner content */
+.landing-page.high-contrast .landing-content {
+  background-color: black !important;
+}
+
+.landing-buttons {
+  margin-top: 20px;
+}
+
+/* Normal mode button styles */
+.landing-buttons button {
+  padding: 12px 20px;
+  margin: 10px;
+  font-size: 18px;
+  background-color: #33415c;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+/* Hover effect in normal mode */
+.landing-buttons button:hover {
+  background-color: #445577;
+}
+
+/* High contrast mode button styles */
+.landing-page.high-contrast .landing-buttons button {
+  color: yellow !important;
+  background-color: black !important;
+  border: 2px solid yellow;
+  font-weight: bold;
+}
+
+/* Hover in high contrast */
+.landing-page.high-contrast .landing-buttons button:hover {
+  background-color: yellow;
+  color: black;
+}
+
+/* Boba cup styles */
+.boba-cup {
+  position: relative;
+  width: 160px;
+  height: 260px;
+  margin: 50px auto 0;
+  background: linear-gradient(to bottom, #fff3e0, #ffd199);
+  clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
+  border: 4px solid #ffa94d;
+  border-radius: 0 0 30px 30px;
+  overflow: hidden;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
 .boba-rim {
   position: absolute;
   top: -10px;
@@ -50,38 +97,35 @@
   z-index: 2;
 }
 
-  
-  .boba-pearls-container {
-    position: absolute;
-    bottom: 5px;
-    width: 100%;
-    height: 90%;
-    overflow: hidden;
-  }
-  
-  .boba-pearl {
-    position: absolute;
-    bottom: 0;
-    width: 10px;
-    height: 10px;
-    background-color: #4e2c27;
-    border-radius: 50%;
+.boba-pearls-container {
+  position: absolute;
+  bottom: 5px;
+  width: 100%;
+  height: 90%;
+  overflow: hidden;
+}
+
+.boba-pearl {
+  position: absolute;
+  bottom: 0;
+  width: 10px;
+  height: 10px;
+  background-color: #4e2c27;
+  border-radius: 50%;
+  opacity: 0.7;
+  animation: floatUp 6s infinite ease-in-out;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) scale(1);
     opacity: 0.7;
-    animation: floatUp 6s infinite ease-in-out;
   }
-  
-  @keyframes floatUp {
-    0% {
-      transform: translateY(0) scale(1);
-      opacity: 0.7;
-    }
-    50% {
-      opacity: 0.4;
-    }
-    100% {
-      transform: translateY(-220px) scale(1.1);
-      opacity: 0;
-    }
+  50% {
+    opacity: 0.4;
   }
-  
-  
+  100% {
+    transform: translateY(-220px) scale(1.1);
+    opacity: 0;
+  }
+}
