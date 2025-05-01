@@ -9,12 +9,12 @@ const LandingPage = () => {
 
   return (
     <div
-      className={`landing-page ${highContrast ? 'high-contrast' : ''}`} // ✅ Add class
-      style={{ fontSize: `${fontSize}px` }} // ✅ Apply font size
+      className={`landing-page ${highContrast ? 'high-contrast' : ''}`}
+      style={{ fontSize: `${fontSize}px`, backgroundColor: highContrast ? 'black' : '#1e1e1e' }} // ✅ Enforce black bg in high contrast
     >
       {/* Main landing content */}
       <div className="landing-content" style={{ position: 'relative', zIndex: 1 }}>
-        <h1>Welcome to LeBoba</h1>
+        <h1 style={{ marginBottom: '1rem' }}>Welcome to LeBoba</h1>
         <div className="landing-buttons">
           <button onClick={() => navigate('/login')}>Login</button>
           <button onClick={() => navigate('/menu/1')}>Continue as Customer</button>

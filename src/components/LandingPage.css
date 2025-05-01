@@ -39,11 +39,11 @@
   margin-top: 20px;
 }
 
-/* Normal mode button styles */
+/* ✅ Normal mode button styles (inherits font size) */
 .landing-buttons button {
   padding: 12px 20px;
   margin: 10px;
-  font-size: 18px;
+  font-size: inherit; /* ← makes font respond to global font size */
   background-color: #33415c;
   border: none;
   border-radius: 8px;
@@ -59,6 +59,7 @@
 
 /* High contrast mode button styles */
 .landing-page.high-contrast .landing-buttons button {
+  font-size: inherit; /* ← keep this here too */
   color: yellow !important;
   background-color: black !important;
   border: 2px solid yellow;
