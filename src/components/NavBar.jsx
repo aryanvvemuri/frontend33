@@ -21,6 +21,12 @@ function NavBar() {
     setUserName(null);
     setIsManager(false);
     setIsEmployee(false);
+  
+    // Clear local storage or session storage
+    localStorage.removeItem('isManager');
+    localStorage.removeItem('isEmployee');
+    localStorage.removeItem('userName');
+  
     navigate('/');
   };
 
