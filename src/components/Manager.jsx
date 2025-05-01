@@ -585,7 +585,7 @@ import React, { useState, useEffect } from 'react';
                  {allIngredients.map(item => (
                    <div key={item.idingredient} className="item-card">
                      <p><strong>{item.item}</strong> — {item.quantity} units</p>
-                     <form onSubmit={(e) => handleAddIngredientQuantity(e, item.idingredient)}>
+                     <form onSubmit={(e) => handleAddIngredientQuantity(e, item.idinventory)}>
                        <input type="number" name="amount" placeholder="Amount to add" required className="quantity-input" />
                        <button type="submit" className="add-btn">Add Quantity</button>
                      </form>
