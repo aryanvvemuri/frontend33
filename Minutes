@@ -1,0 +1,19 @@
+Meeting 1:
+For the SCRUM MEETING from April 21st, we made sure everyone understood the google authentication and that we understood how the inventory and ingredients management page worked. 
+Once all that was done, we talked about adding the language accessibility and where we wanted it to be visually. 
+Then we talked about how we could improve our visual aesthetics. 
+Sriharsha planned to work on improving the visual aesthetics that we discussed in the meeting and Aryan was going to work on implementing the language accessibility. 
+Tyler and Shiv would work on improving the menu.js and index.js file to make it easier on the frontend for retrieving menu information. 
+
+Meeting 2:
+For the SCRUM MEETING from April 23rd, we talked about Language accessbility and everyone felt it was great. 
+Then we talked about how the employee and customer layouts were distinct and if it fit well or not. 
+We decided that both interfaces worked and we just needed to add a landing page that helped users pick if they were a customer or an employee. 
+Then for our final task of the meeting we just talked about how we could tweak the accessibility and some more visuals for a different persona. 
+Tyler planned to work on the landing page before the next meeting. Shiv and Sriharsha would work on testing the accessibility to meet the guidelines. 
+
+Meeting 3:
+For the SCRUM MEETING from April 25th,  everyone talked about how they felt about the landing page and everyone was satisfied. 
+Then we talked about how the accessibility testing went and that we were only missing the nutrition and allergens, but Aryan planned to complete it before we had to do the Github release. 
+The rest of the meeting was just planning out how we wanted to carry out the demo and when we wanted to get the documents done and how we wanted to distribute the work.  
+We decided for the documents that we would just continue distributing workload how we’ve been doing it for the previous sprints.
